@@ -1,6 +1,6 @@
 # Portfolio copy — framed cases
 
-Muneeb Khokhar · FlyRank ML internship, Applied Search Intelligence track
+Muneeb Ur Rehman · FlyRank ML internship, Applied Search Intelligence track
 
 ## Voice card
 
@@ -41,13 +41,13 @@ Not included, because they aren't finished: the validation audit (ML-09), the ac
 
 > ### I build ranking tools that tell an editor what to look at first.
 >
-> I'm Muneeb Khokhar, an ML intern on FlyRank's Applied Search Intelligence track. I work on one
+> I'm Muneeb Ur Rehman, an ML intern on FlyRank's Applied Search Intelligence track. I work on one
 > problem: a content team has 120,000 pages and time to review fifty. Which fifty?
 >
 > Three cases below. Each one has the numbers, the split they were measured on, and the part that
 > didn't work.
 >
-> [Email me →](mailto:abdullah995malik@gmail.com)
+> [Email me →](mailto:muneebkhokher38@gmail.com)
 
 ---
 
@@ -218,7 +218,7 @@ pages aren't declining *because* of their traffic level, and I haven't controlle
 
 ## 5. About
 
-> I'm Muneeb Khokhar. I'm an ML intern on FlyRank's Applied Search Intelligence track, working on
+> I'm Muneeb Ur Rehman. I'm an ML intern on FlyRank's Applied Search Intelligence track, working on
 > one question: out of 120,000 pages, which fifty should an editor open this week?
 >
 > Most of what I've learned so far is about not fooling myself. I've had a model score a perfect
@@ -235,7 +235,7 @@ pages aren't declining *because* of their traffic level, and I haven't controlle
 
 **Short version, for a header or a LinkedIn line:**
 
-> Muneeb Khokhar — ML intern working on search-content ranking. I report the split with the number.
+> Muneeb Ur Rehman — ML intern working on search-content ranking. I report the split with the number.
 
 ---
 
@@ -245,7 +245,7 @@ pages aren't declining *because* of their traffic level, and I haven't controlle
 >
 > I'll send the notebooks — they run top to bottom, numbers included.
 >
-> **[abdullah995malik@gmail.com](mailto:abdullah995malik@gmail.com)** · [GitHub](https://github.com/muneeb-khokhar/flyrank-ml-track)
+> **[muneebkhokher38@gmail.com](mailto:muneebkhokher38@gmail.com)** · [GitHub](https://github.com/muneeb-khokhar/flyrank-ml-track)
 
 One action, one address, on every page. No form, no calendar link, no newsletter.
 
