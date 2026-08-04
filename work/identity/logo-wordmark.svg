@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 64" width="420" height="64" role="img" aria-label="Muneeb Ur Rehman">
+  <rect x="0" y="8" width="48" height="48" rx="10" fill="#2F4858"/>
+  <text x="24" y="30"
+        text-anchor="middle" dominant-baseline="central"
+        font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif"
+        font-size="20" font-weight="600" letter-spacing="-0.9" fill="#FBFAF7">MR</text>
+  <rect x="13" y="43" width="22" height="2" rx="1" fill="#A8461F"/>
+
+  <text x="64" y="27"
+        font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif"
+        font-size="21" font-weight="500" letter-spacing="-0.5" fill="#14161A">Muneeb Ur Rehman</text>
+  <text x="64" y="47"
+        font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif"
+        font-size="12" font-weight="400" letter-spacing="0.6" fill="#2F4858">ML · SEARCH INTELLIGENCE</text>
+</svg>

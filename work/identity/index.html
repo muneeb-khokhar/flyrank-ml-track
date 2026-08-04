@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Identity kit — Muneeb Ur Rehman</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161A;
+    --paper:#FBFAF7;
+    --slate:#2F4858;
+    --accent:#A8461F;
+    --rule:#E3E0D9;
+    --muted:#5B6670;
+    --head:'Space Grotesk',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--body); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding:56px 24px 96px}
+  header{display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap}
+  /* width-driven, height:auto — a fixed height plus max-width squashes the SVG on narrow screens */
+  header img{width:min(368px,100%); height:auto}
+  .kicker{
+    font-family:var(--body); font-size:11px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  }
+  h1{font-family:var(--head); font-size:34px; font-weight:600; letter-spacing:-.02em; line-height:1.15; margin:40px 0 8px}
+  h2{
+    font-family:var(--head); font-size:13px; font-weight:600; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--slate); margin:0 0 20px;
+    padding-bottom:10px; border-bottom:1px solid var(--rule);
+  }
+  h3{font-family:var(--head); font-size:19px; font-weight:600; letter-spacing:-.01em; margin:0 0 4px}
+  section{margin-top:56px}
+  p{margin:0 0 14px; max-width:62ch}
+  .lede{font-size:17px; color:var(--muted); max-width:60ch; margin-bottom:0}
+  .sub{font-size:13px; color:var(--muted); margin:0}
+  code{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace; font-size:.88em}
+
+  /* type specimens */
+  .spec{border:1px solid var(--rule); border-radius:10px; padding:24px; margin-bottom:16px; background:#fff}
+  .spec .name{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px}
+  .sample-h{font-family:var(--head); font-size:38px; font-weight:600; letter-spacing:-.025em; line-height:1.1; margin:0 0 10px; word-break:break-word}
+  .sample-b{font-family:var(--body); font-size:16px; line-height:1.65; margin:0; color:var(--ink); max-width:58ch}
+  .scale{margin-top:18px; padding-top:16px; border-top:1px dashed var(--rule); display:grid; gap:7px}
+  .scale div{display:flex; gap:14px; align-items:baseline; font-size:13px; color:var(--muted)}
+  .scale b{font-weight:600; color:var(--ink); min-width:104px; font-size:12px; letter-spacing:.04em; text-transform:uppercase}
+
+  /* palette */
+  .swatches{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:14px}
+  .sw{border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:#fff}
+  .chip{height:96px}
+  .sw .meta{padding:14px 16px 16px}
+  .sw .role{font-family:var(--head); font-weight:600; font-size:15px; margin-bottom:2px}
+  .hex{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace; font-size:13px; color:var(--slate); letter-spacing:.02em}
+  .ratio{font-size:12px; color:var(--muted); margin-top:6px}
+
+  /* logo */
+  .logos{display:flex; align-items:center; gap:32px; flex-wrap:wrap; padding:28px; border:1px solid var(--rule); border-radius:10px; background:#fff}
+  .sizes{display:flex; align-items:flex-end; gap:20px}
+  .sizes figure{margin:0; text-align:center}
+  .sizes img{display:block; margin:0 auto 8px}
+  .sizes figcaption{font-size:11px; color:var(--muted); letter-spacing:.04em}
+
+  /* style note */
+  .note{
+    border-left:3px solid var(--accent); background:#fff;
+    padding:20px 22px; border-radius:0 10px 10px 0; margin-bottom:20px;
+  }
+  .note p{margin:0; font-size:16px}
+  .note p + p{margin-top:8px}
+  pre{
+    background:#fff; border:1px solid var(--rule); border-radius:10px;
+    padding:18px 20px; overflow-x:auto; font-size:13px; line-height:1.65;
+    font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace; margin:0;
+  }
+  ul{margin:0; padding-left:20px; max-width:62ch}
+  li{margin-bottom:8px}
+  .no{color:var(--accent); font-weight:600}
+  footer{margin-top:64px; padding-top:20px; border-top:1px solid var(--rule); font-size:13px; color:var(--muted)}
+  @media (max-width:600px){
+    h1{font-size:27px} .sample-h{font-size:29px} .wrap{padding:36px 18px 72px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img src="logo-wordmark.svg" alt="Muneeb Ur Rehman">
+    <span class="kicker">Identity kit · v1</span>
+  </header>
+
+  <h1>Quiet system, loud work.</h1>
+  <p class="lede">Two fonts, four colours, one mark. Everything here is chosen to sit still so that
+  a number on the page is the thing you notice.</p>
+
+  <section>
+    <h2>Type</h2>
+
+    <div class="spec">
+      <div class="name">
+        <div><h3>Space Grotesk</h3><p class="sub">Headings, the wordmark, and numbers. Google Fonts · SIL OFL.</p></div>
+        <span class="kicker">Heading</span>
+      </div>
+      <p class="sample-h">The model scored 1.000 and was worthless</p>
+      <div class="scale">
+        <div><b>Page title</b> 34px / 600 / −0.02em</div>
+        <div><b>Case title</b> 19px / 600 / −0.01em</div>
+        <div><b>Section label</b> 13px / 600 / +0.12em / uppercase</div>
+        <div><b>Numbers</b> 600, tabular figures — digits must align between cards</div>
+      </div>
+    </div>
+
+    <div class="spec">
+      <div class="name">
+        <div><h3>Inter</h3><p class="sub">Body copy and small labels. Google Fonts · SIL OFL.</p></div>
+        <span class="kicker">Body</span>
+      </div>
+      <p class="sample-b">A content team can't review every page. They review the top of a list, so the
+      only thing that matters is what's at the top of the list. I framed it as a ranking problem, not a
+      classification problem — the output isn't a verdict on a page, it's an order.</p>
+      <div class="scale">
+        <div><b>Body</b> 16px / 400 / 1.6 line-height</div>
+        <div><b>Small label</b> 11px / 600 / +0.14em / uppercase</div>
+        <div><b>Measure</b> 62 characters max — never full-width paragraphs</div>
+      </div>
+    </div>
+    <p class="sub">Two fonts, four weights total. Inter is here because it holds up at 11px on a phone,
+    which is where the one visitor who matters is reading.</p>
+  </section>
+
+  <section>
+    <h2>Palette</h2>
+    <div class="swatches">
+      <div class="sw">
+        <div class="chip" style="background:#14161A"></div>
+        <div class="meta">
+          <div class="role">Ink</div>
+          <div class="hex">#14161A</div>
+          <div class="ratio">All text. 17.35:1 on Paper.</div>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="chip" style="background:#FBFAF7; border-bottom:1px solid #E3E0D9"></div>
+        <div class="meta">
+          <div class="role">Paper</div>
+          <div class="hex">#FBFAF7</div>
+          <div class="ratio">Every background. Warm, not white.</div>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="chip" style="background:#2F4858"></div>
+        <div class="meta">
+          <div class="role">Slate</div>
+          <div class="hex">#2F4858</div>
+          <div class="ratio">Main colour — labels, rules, the mark. 9.19:1 on Paper.</div>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="chip" style="background:#A8461F"></div>
+        <div class="meta">
+          <div class="role">Signal</div>
+          <div class="hex">#A8461F</div>
+          <div class="ratio">Accent. Links and the one CTA. 5.65:1 on Paper.</div>
+        </div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:16px">Ratios are measured, not estimated — computed against
+    Paper with the WCAG relative-luminance formula. Every pair above clears 4.5:1 for normal text.
+    <span class="no">Never Slate on Ink</span> (1.89:1) — the only combination in this palette that fails.</p>
+  </section>
+
+  <section>
+    <h2>Mark</h2>
+    <div class="logos">
+      <div class="sizes">
+        <figure><img src="favicon.svg" width="64" height="64" alt="Monogram at 64px"><figcaption>64</figcaption></figure>
+        <figure><img src="favicon.svg" width="32" height="32" alt="Monogram at 32px"><figcaption>32</figcaption></figure>
+        <figure><img src="favicon.svg" width="16" height="16" alt="Monogram at 16px"><figcaption>16</figcaption></figure>
+      </div>
+      <div>
+        <h3 style="margin-bottom:6px">MR</h3>
+        <p class="sub" style="max-width:34ch">Initials in the heading font on a Slate square, with one
+        Signal rule beneath. The rule is the only decoration in the whole system, and it earns its place
+        by being the thing that survives at 16px.</p>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:14px">Before production, convert the monogram text to outlines so
+    it renders identically where Space Grotesk isn't loaded.</p>
+  </section>
+
+  <section>
+    <h2>Style note</h2>
+    <div class="note">
+      <p>Space Grotesk for headings and numbers, Inter for body and labels; Ink <code>#14161A</code> on
+      Paper <code>#FBFAF7</code>, Slate <code>#2F4858</code> for structure, Signal <code>#A8461F</code>
+      for links and the single call to action.</p>
+      <p>Calm, technical, and unfussy — the page should feel like a well-kept lab notebook, so the
+      numbers and the honest caveats are the loudest things on it.</p>
+    </div>
+
+    <p>The version that goes in the Claude Project, with the sizes and spacing spelled out:</p>
+<pre>Build everything in this system.
+
+TYPE   Headings + numbers: Space Grotesk 600. Page title 34px/-0.02em,
+       case title 19px, section label 13px uppercase +0.12em.
+       Body + labels: Inter. Body 16px/1.6, small label 11px
+       uppercase +0.14em. Max measure 62 characters.
+       Numbers use tabular figures so digits align between cards.
+
+COLOUR Text #14161A. Background #FBFAF7. Structure - rules, labels,
+       the mark - #2F4858. Links and the one CTA #A8461F, and nothing
+       else. Never #2F4858 on #14161A (1.89:1).
+
+SPACE  56px between sections, 24px inside cards, 14px between a
+       heading and its paragraph. When unsure, add space rather than
+       a border, and a border rather than a background.
+
+MOOD   Calm, technical, unfussy - a well-kept lab notebook. No
+       gradients, no shadows beyond a hairline border, no icons, no
+       decoration that isn't load-bearing. The numbers are the
+       loudest thing on the page.</pre>
+  </section>
+
+  <section>
+    <h2>Rules this system lives by</h2>
+    <ul>
+      <li>One accent, used twice per page at most. If Signal is everywhere, nothing is signalled.</li>
+      <li>Space before borders, borders before backgrounds. Most separation problems are spacing problems.</li>
+      <li>Numbers get the heading font and tabular figures. They're the evidence; they should look like it.</li>
+      <li>No gradient, no shadow deeper than a hairline, no icon set. Nothing decorative that isn't doing a job.</li>
+      <li>If a colour choice needs a paragraph of justification, it's the wrong colour.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Muneeb Ur Rehman · ML · Search Intelligence · Fonts: Space Grotesk &amp; Inter, both SIL Open Font License.
+  </footer>
+
+</div>
+</body>
+</html>
