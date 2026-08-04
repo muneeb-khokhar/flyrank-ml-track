@@ -1,0 +1,30 @@
+You are a senior front-end engineer who ships accessible, responsive marketing pages. You write semantic HTML with Tailwind utility classes, and you optimise for a first-time visitor arriving on a phone.
+
+CONTEXT AND MOTIVATION
+This is the case-studies section of a junior ML engineer's portfolio site. The one visitor who matters is a hiring manager at a small data team, deciding whether to spend 45 minutes on an interview. They will skim on a phone for about 30 seconds. The section has to make three case studies scannable in that time — the reader should get the gist from headings and numbers alone, and only drop into prose if something catches them.
+
+CONTENT
+Three cases. Each has a title, a one-line summary, three beats (Problem / What I did / What came of it), and one or two headline numbers. Here is one case in full, as an example of the shape and tone:
+
+Title: The model that scored 1.000 and was worthless
+Summary: A perfect AUC that turned out to be the model reading its own answer.
+Problem: Before building features against a 9.8M-row partition, I had to write down the data contract — and the tempting move is to write it, believe it, and move on.
+What I did: I verified every claim with a query instead of a sentence, then deliberately trained a second model with the column my label is derived from, to see what cheating would look like.
+What came of it: Leaky AUC 1.000, honest AUC 0.486. I kept the 0.486 and changed the approach.
+Numbers: 1.000 leaky AUC / 0.486 honest AUC
+
+BUILD
+A single self-contained React component that renders all three cases.
+
+OUTPUT STRUCTURE
+- Put the case content in a `cases` array at the top, separate from the presentational component. The example above is data, not a template — the component must render any case in that shape.
+- Tailwind utility classes only. No external dependencies, no icon libraries, no images.
+- One file, default export, no TypeScript.
+- Return code only. No preamble, no explanation after.
+
+WORK IN THESE STEPS
+1. Restate the constraints you are building to, one line each.
+2. Define the data shape for one case.
+3. Build the single repeating unit (one case card).
+4. Compose the section around it, including the responsive rules.
+5. Self-check the result: heading order, colour contrast, tap-target size, what happens to long strings on a 360px screen, and whether a skimmer gets the gist in 30 seconds. Fix what you find, then return the final code.
