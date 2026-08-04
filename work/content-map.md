@@ -60,7 +60,7 @@ the reader who wants depth before emailing.
 | # | Section | Contains | Image |
 |---|---|---|---|
 | 1 | Hero | The claim, one supporting line, primary CTA | `hero-texture.svg` |
-| 2 | **Case 1 summary** — The review queue that beat the rule | Title, one-line summary, the LOCO headline as **"23 of 24 held-out clients, 2.30× mean lift"** (never a single-split decimal — see note below), three beats compressed to one line each, "Read the full case →" | `fig-queue-precision.svg` |
+| 2 | **Case 1 summary** — The review queue that beat the rule | Title, one-line summary, the LOCO headline as **"21 of 24 held-out clients, 2.17× mean lift"** (never a single-split decimal — see note below), three beats compressed to one line each, "Read the full case →" | `fig-queue-precision.svg` |
 | 3 | Case 2 summary — The model that scored 1.000 and was worthless | Same shape, stat pair `1.000 / 0.486` | `fig-leaky-vs-honest.svg` |
 | 4 | Case 3 summary — Two assumptions behind the rule, tested | Same shape, stat pair `0.342 → 0.204` | `fig-volume-vs-decline.svg` |
 | 5 | About (short) | Three sentences from the bio + headshot | `headshot.jpg` |
@@ -75,9 +75,9 @@ pinned the window. Case 2 is the sharper single story about honesty, but as an o
 reader to admire a failure before they know I can ship. It earns more in position 3, once Case 1 has
 bought the credibility.
 
-**No single-split decimal anywhere on the site.** `0.500` on one seed-42 split became `0.30–0.62`
-across seven seeds — it was one draw, not a measurement. So the cards and the hero carry the LOCO
-result (23 of 24 scoreable held-out clients, 2.30× mean lift), and the single-split table appears only inside
+**No single-split decimal anywhere on the site.** `0.600` on one seed-42 split became `0.34–0.66`
+across seven seeds — it was one draw of nine clients, not a measurement. So the cards and the hero carry the LOCO
+result (21 of 24 scoreable held-out clients, 2.17× mean lift), and the single-split table appears only inside
 the case page, explicitly labelled as the thing that *prompted* the audit rather than a co-equal
 result. The through-line for the whole site: **every number that follows exists because an earlier
 number made me suspicious of itself.**
@@ -89,8 +89,8 @@ number made me suspicious of itself.**
 | 1 | Title + stat pair + one-line summary |
 | 2 | The problem |
 | 3 | What I did, and what I decided — the three defended decisions |
-| 4 | What came of it — LOCO first (23 of 24 scoreable clients, 2.30x mean lift, receipt in work/outputs/validation_audit.json), then the single-split table labelled as the trigger, then the date-pinning bug |
-| 5 | The receipts — `capture-w05-results.png` (**must be re-captured post-pin**) and the `w06` LOCO output once committed |
+| 4 | What came of it — LOCO first (21 of 24 scoreable clients, 2.17x mean lift, receipt is w06's committed output), then the single-split table labelled as the trigger, then the date-pinning bug |
+| 5 | The receipts — `w06`'s committed LOCO table, and `capture-w05-results.png` (**must be re-captured**) |
 | 6 | What this doesn't say |
 | 7 | CTA |
 
@@ -154,9 +154,9 @@ Honest list, so build week isn't blocked by a surprise.
 
 | Item | For | Status |
 |---|---|---|
-| **Re-run `w05_model` under the pinned window** | Case 1's single-split table, and the screenshot | **Blocking.** The committed notebook and `capture-w05-results.png` still show the pre-pin `0.180 / 0.620`; the case now reports `0.200 / 0.500`. A receipt that disagrees with the write-up is worse than none |
+| One confirming re-run of `w05` + `w06` after the `ORDER BY` fix | Case 1's last open caveat | `w05` says 0.600 and `w06` says 0.620 for the same seed-42 split — row-order nondeterminism, now fixed. One run each closes it |
 | **Re-capture `capture-w05-results.png`** | Case 1 | Follows directly from the re-run above |
-| ~~Run the validation audit~~ | Case 1's LOCO headline | **Done** — `work/outputs/validation_audit.json` holds the seed sweep, the LOCO per-client table and the date-anchor counts. `w06_validation_audit.ipynb` still needs one Colab run so the notebook itself carries the outputs |
+| ~~Run the validation audit~~ | Case 1's LOCO headline | **Done** — `w06_validation_audit.ipynb` is run and committed with the seed sweep, the per-client LOCO table and the date-anchor counts |
 | **FlyRank policy on per-client detail** | Whether the LOCO table can be shown at all | **External blocker — ask a person, don't assume.** If per-client rows can't be published, the LOCO section becomes an aggregate finding described rather than shown, which reshapes the case page |
 | **Case 4** — validation audit | A fourth case, or depth on Case 1 | ML-09 not started. The three rows above are its natural content |
 | **Case 5** — the action playbook | Would be the most "hireable" case: model → recommendation | ML-10 not started |
