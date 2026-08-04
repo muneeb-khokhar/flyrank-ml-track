@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340" role="img" aria-label="Leaky AUC 1.000 versus honest AUC 0.486.">
+<title>Leaky AUC 1.000 versus honest AUC 0.486.</title>
+<rect width="760" height="340" fill="#FBFAF7"/>
+<text x="32" y="44" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="21" font-weight="600" letter-spacing="-0.3" fill="#14161A">A perfect score, and the one I kept</text>
+<text x="32" y="66" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12.5" fill="#5B6670">Same features, same split — one version could see the label's own arithmetic</text>
+<rect x="32" y="122" width="332" height="150" rx="10" fill="none" stroke="#E3E0D9"/>
+<rect x="32" y="122" width="4" height="150" rx="2" fill="#A8461F"/>
+<text x="56" y="178" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="42" font-weight="600" letter-spacing="-1" fill="#14161A">1.000</text>
+<text x="56" y="202" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11.5" font-weight="600" letter-spacing="0.06em" fill="#A8461F">LEAKY — IMP_LAST30 INCLUDED</text>
+<text x="56" y="228" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">The label is a ratio built</text>
+<text x="56" y="246" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">from this exact column.</text>
+<rect x="396" y="122" width="332" height="150" rx="10" fill="none" stroke="#E3E0D9"/>
+<rect x="396" y="122" width="4" height="150" rx="2" fill="#2F4858"/>
+<text x="420" y="178" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="42" font-weight="600" letter-spacing="-1" fill="#14161A">0.486</text>
+<text x="420" y="202" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11.5" font-weight="600" letter-spacing="0.06em" fill="#2F4858">HONEST — PRIOR WINDOW ONLY</text>
+<text x="420" y="228" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">Worse than a coin flip.</text>
+<text x="420" y="246" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">This is the number I reported.</text>
+<line x1="32" y1="298" x2="728" y2="298" stroke="#E3E0D9" stroke-width="1"/>
+<text x="32" y="318" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11" fill="#5B6670">March 2026 partition · 46,016 content items after the availability filter.</text>
+</svg>
