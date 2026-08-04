@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Rejected hero texture: abstract flowing gradient mesh.">
+<title>Rejected hero texture: abstract flowing gradient mesh.</title>
+<rect width="1200" height="420" fill="#FBFAF7"/>
+<defs>
+<linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#A8461F" stop-opacity="0.85"/>
+<stop offset="55%" stop-color="#2F4858" stop-opacity="0.75"/>
+<stop offset="100%" stop-color="#14161A" stop-opacity="0.9"/>
+</linearGradient>
+<filter id="b"><feGaussianBlur stdDeviation="26"/></filter>
+</defs>
+<rect width="1200" height="420" fill="url(#g1)"/>
+<g filter="url(#b)" opacity="0.55">
+<circle cx="210" cy="150" r="170" fill="#A8461F" opacity="0.5"/>
+<circle cx="520" cy="300" r="210" fill="#FBFAF7" opacity="0.5"/>
+<circle cx="880" cy="120" r="190" fill="#A8461F" opacity="0.5"/>
+<circle cx="1080" cy="330" r="160" fill="#FBFAF7" opacity="0.5"/>
+</g>
+<g stroke="#FBFAF7" stroke-width="2" fill="none" opacity="0.4">
+<path d="M0 70 C 200 18, 420 126, 640 70 S 1000 24, 1200 86"/>
+<path d="M0 116 C 200 64, 420 172, 640 116 S 1000 70, 1200 132"/>
+<path d="M0 162 C 200 110, 420 218, 640 162 S 1000 116, 1200 178"/>
+<path d="M0 208 C 200 156, 420 264, 640 208 S 1000 162, 1200 224"/>
+<path d="M0 254 C 200 202, 420 310, 640 254 S 1000 208, 1200 270"/>
+<path d="M0 300 C 200 248, 420 356, 640 300 S 1000 254, 1200 316"/>
+<path d="M0 346 C 200 294, 420 402, 640 346 S 1000 300, 1200 362"/>
+</g>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" role="img" aria-label="Decline rate falls as traffic rises: low 0.342, moderate 0.299, good 0.226, excellent 0.204.">
+<title>Decline rate falls as traffic rises: low 0.342, moderate 0.299, good 0.226, excellent 0.204.</title>
+<rect width="760" height="400" fill="#FBFAF7"/>
+<text x="32" y="44" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="21" font-weight="600" letter-spacing="-0.3" fill="#14161A">The assumption ran backwards</text>
+<text x="32" y="66" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12.5" fill="#5B6670">Observed decline rate by prior-30-day impressions · all 120,507 pages</text>
+<text x="198" y="138.0" text-anchor="end" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="13.5" fill="#5B6670">Low</text>
+<rect x="214" y="118" width="381.3" height="30" rx="4" fill="#2F4858"/>
+<text x="607.3" y="138.0" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="14" font-weight="600" fill="#14161A">0.342</text>
+<text x="657.3" y="138.0" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11.5" fill="#5B6670">n=39,321</text>
+<text x="198" y="188.0" text-anchor="end" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="13.5" fill="#5B6670">Moderate</text>
+<rect x="214" y="168" width="333.4" height="30" rx="4" fill="#2F4858"/>
+<text x="559.4" y="188.0" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="14" font-weight="600" fill="#14161A">0.299</text>
+<text x="609.4" y="188.0" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11.5" fill="#5B6670">n=33,103</text>
+<text x="198" y="238.0" text-anchor="end" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="13.5" fill="#5B6670">Good</text>
+<rect x="214" y="218" width="252.0" height="30" rx="4" fill="#2F4858"/>
+<text x="478.0" y="238.0" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="14" font-weight="600" fill="#14161A">0.226</text>
+<text x="528.0" y="238.0" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11.5" fill="#5B6670">n=33,175</text>
+<text x="198" y="288.0" text-anchor="end" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="13.5" fill="#5B6670">Excellent</text>
+<rect x="214" y="268" width="227.5" height="30" rx="4" fill="#2F4858"/>
+<text x="453.5" y="288.0" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="14" font-weight="600" fill="#14161A">0.204</text>
+<text x="503.5" y="288.0" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11.5" fill="#5B6670">n=14,908</text>
+<line x1="214" y1="108" x2="214" y2="308" stroke="#E3E0D9" stroke-width="1"/>
+<text x="214" y="338" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#A8461F" font-weight="600">Higher traffic → lower decline rate, monotonically.</text>
+<line x1="32" y1="358" x2="728" y2="358" stroke="#E3E0D9" stroke-width="1"/>
+<text x="32" y="378" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11" fill="#5B6670">The 'visible' half of the refresh rule selects the pages least likely to be at risk.</text>
+</svg>
