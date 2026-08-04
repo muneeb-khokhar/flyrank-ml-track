@@ -89,43 +89,59 @@ because the rule's failure was specifically about combining signals, and that's 
 
 ### What came of it
 
-**The headline is leave-one-client-out.** Every client held out in turn, the model trained on the
-other 23 and scored on the one it had never seen:
+**The headline is leave-one-client-out.** Every client held out in turn, the model trained on all the
+others and scored on the one it had never seen. Every figure below traces to
+[`work/outputs/validation_audit.json`](outputs/validation_audit.json), written by a single run over a
+window pinned to `2026-03-31`.
 
-| Leave-one-client-out, 24 clients | |
+| Leave-one-client-out | |
 |---|---|
-| Clients beating their own base rate | **21 of 24** |
-| Mean lift over base rate | **2.28×** |
-| Clients outside the 95% band | 10, against ~1 expected — and all 10 positive |
+| Clients in the panel | 36 |
+| Clients scoreable (≥50 rows, both classes present) | 24 |
+| **Scoreable clients beating their own base rate** | **23 of 24** |
+| **Mean lift over each client's own base rate** | **2.30×** |
+| Mean Precision@50 across held-out clients | 0.297 |
+| Range across clients | 0.04 – 0.70 |
 
-That last row is the one I'd defend hardest. If the ranking were noise you'd expect roughly one
-client to fall outside the band by chance, and you'd expect the strays to land on both sides. Ten
-landed outside, all in the same direction. That's a pattern, not a fluke.
+The lift column is the one that matters. Absolute Precision@50 varies enormously between clients
+because their base rates do — a client where 1.8% of pages decline cannot produce the same P@50 as
+one where 50% do. Comparing each client against *its own* base rate is the only version of the
+question that means anything, and on that question 23 of 24 came out ahead.
+
+Twelve of the 36 clients were not scoreable at all: fewer than 50 rows, or every page in one class.
+I report 36 and 24 separately rather than quietly using the smaller number as the denominator.
 
 **The single-split table is not a co-equal result. It's the thing that made me suspicious.**
 
 | Method | Precision@50 — one split, seed 42 |
 |---|---:|
 | Random order (test base rate) | 0.161 |
-| The hand-written rule | 0.200 |
-| Logistic regression | 0.260 |
-| Random forest | 0.500 |
+| The hand-written rule | 0.160 |
+| Random forest | 0.580 |
 
-I originally reported that 0.500 as the result. Then I ran the same split design across seven seeds
-and got **0.30 to 0.62**. The number hadn't moved because the model changed — it moved because a
-different set of clients happened to land on the test side, and pages within a client move together.
-One split was never a measurement; it was one draw I'd mistaken for one.
+That split put 9 clients on the test side. **Nine.** 21,610 rows sounds like a lot until you notice
+the split is really a draw of nine clients, and pages within a client move together.
 
-So the table above appears here as the trigger for the audit, explicitly labelled unstable, and LOCO
-is what I stand behind. Every number that follows in this case exists because an earlier number made
-me suspicious of itself.
+So I ran the same design across seven seeds: **0.28 to 0.60, mean 0.491, sd 0.108.** The model never
+changed. Only which nine clients landed on the test side. A number that swings by 0.32 depending on
+the draw was never a measurement — it was one sample I'd mistaken for one.
 
-**And then the audit had its own bug.** Before I pinned the extraction window, LOCO showed 22 of 24
-and 2.37×; after pinning to `2026-03-31`, 21 of 24 and 2.28×. Same LOCO code, same seed, nothing
-else changed — so I attribute the difference to partition drift, `MAX(report_date)` resolving
-against a warehouse that had moved under me. **I can't verify that.** I never logged what the window
-resolved to on the earlier run, so I can only infer the cause from the fact that nothing else
-differed. That missing log is itself the defect, and it's exactly what the pinning fixes.
+That table appears here as the trigger for the audit, not as a result. Every number after it exists
+because an earlier number made me suspicious of itself.
+
+**The broken feature is worse than I thought.** `days_since_update` is measured against the window
+end, so a page edited after the window closes comes out negative. That affects **65,211 of 81,446
+rows — 80.1% of the data.** Not an edge case: for four fifths of the panel the feature describes an
+edit that hadn't happened at decision time. Decline rate differs across the two groups (0.165 where
+negative, 0.214 where not), so it isn't even noise — it's structured.
+
+**And the audit had its own reproducibility bug.** The extraction window came from
+`MAX(report_date)`, which resolves against whatever the warehouse holds at run time. An earlier LOCO
+run gave 22 of 24 and 2.37×; pinning the window to `2026-03-31` gives the numbers above. Same code,
+same seed. I attribute the difference to partition drift — **and I can't prove it**, because I never
+logged what the window resolved to on the earlier run. That missing log is itself the defect. The
+window is now hardcoded and printed into the output of every notebook that reads it, so the next
+person to disagree with my numbers can at least see what I measured them over.
 
 Then the part I'd actually talk about in an interview. At a 0.8 confidence threshold the model had
 zero confident mistakes, which made me suspicious rather than pleased. I dropped the threshold to
@@ -141,13 +157,16 @@ That's a limitation of my feature table, not a quirk of the model, and it's the 
 refreshing a page recovers its traffic — that needs an experiment I haven't run. It ranks pages for
 a human to look at.
 
-It also doesn't say the model scores 0.500, or 0.620, or any single number. On one seed-42 split it
-scored 0.500; across seven seeds of that same design, 0.30 to 0.62. The claim I'll defend is the
-LOCO one — 21 of 24 held-out clients beat their own base rate at a mean lift of 2.28× — because
-that's the only version where every client got tested rather than one lucky draw of them.
+It also doesn't say the model scores 0.580, or any single number. Across seven seeds of that same
+split design it ranged 0.28 to 0.60. The claim I'll defend is the LOCO one — 23 of 24 scoreable
+held-out clients beat their own base rate at a mean lift of 2.30× — because that's the only version
+where every client got tested rather than one draw of nine of them.
+
+It also doesn't cover the 12 clients too small or too one-sided to score. Whatever the model does on
+a client with 40 pages, this doesn't measure it.
 
 And the date-drift explanation is a hypothesis, not a finding. I can't prove partition drift caused
-the 22/24 → 21/24 shift, only that nothing else changed.
+the earlier 22/24 → 2.37× result to move, only that nothing else changed between the runs.
 
 ---
 
@@ -309,8 +328,9 @@ One action, one address, on every page. No form, no calendar link, no newsletter
 **After — my edit:**
 
 > I built a ranked review queue for a content team with 120,000 pages and time for fifty. Held out
-> one client at a time, it beat that client's own base rate for 21 of 24 clients, averaging 2.28×.
-> I report that instead of my first number, which looked better and turned out to be one lucky split.
+> one client at a time, it beat that client's own base rate for 23 of 24 scoreable clients, averaging
+> 2.30×. I report that instead of my first number, which looked better and turned out to be a draw of
+> nine clients.
 
 What changed and why:
 
