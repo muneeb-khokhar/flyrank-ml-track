@@ -2,12 +2,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
 body{background:#FBFAF7;color:#14161A;font-family:Inter,system-ui,sans-serif;margin:0;padding:40px 24px}
-h1{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:600;letter-spacing:-.02em;max-width:900px;margin:0 auto 28px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:600;letter-spacing:-.02em;max-width:900px;margin:0 auto 8px}
+p.sub{max-width:900px;margin:0 auto 28px;color:#5B6670;font-size:14px}
 figure{max-width:900px;margin:0 auto 34px;border:1px solid #E3E0D9;border-radius:10px;overflow:hidden;background:#fff}
 figcaption{font-size:11px;font-weight:600;letter-spacing:.12em;color:#5B6670;padding:12px 16px;border-bottom:1px solid #E3E0D9}
-figure svg{display:block;width:100%;height:auto}
+figure svg,figure img{display:block;width:100%;height:auto}
+.pending{padding:28px 16px;color:#A8461F;font-size:13px;text-align:center}
 </style>
 <h1>Image set — contact sheet</h1>
+<p class="sub">Two real captures, three figures plotted from committed notebook numbers, one generated hero texture, one rejected hero, one slot deliberately left open.</p>
+<figure data-name="capture-w05-results.png"><figcaption>REAL CAPTURE · Case 1 receipt — w05_model results table</figcaption><img src="capture-w05-results.png" alt="REAL CAPTURE · Case 1 receipt — w05_model results table"></figure>
+<figure data-name="capture-w03-leakage.png"><figcaption>REAL CAPTURE · Case 2 receipt — w03_data_contract AUC prints</figcaption><img src="capture-w03-leakage.png" alt="REAL CAPTURE · Case 2 receipt — w03_data_contract AUC prints"></figure>
 <figure data-name="fig-queue-precision.svg"><figcaption>KEEPER · fig-queue-precision.svg</figcaption><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" data-w="760" data-h="400" role="img" aria-label="Precision at 50 by method. Random forest 0.620, logistic regression 0.260, hand-written rule 0.180, random order 0.161.">
 <title>Precision at 50 by method. Random forest 0.620, logistic regression 0.260, hand-written rule 0.180, random order 0.161.</title>
 <rect width="760" height="400" fill="#FBFAF7"/>
@@ -35,16 +40,18 @@ figure svg{display:block;width:100%;height:auto}
 <rect width="760" height="340" fill="#FBFAF7"/>
 <text x="32" y="44" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="21" font-weight="600" letter-spacing="-0.3" fill="#14161A">A perfect score, and the one I kept</text>
 <text x="32" y="66" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12.5" fill="#5B6670">Same features, same split — one version could see the label's own arithmetic</text>
-<rect x="32" y="122" width="332" height="132" rx="10" fill="none" stroke="#E3E0D9"/>
-<rect x="32" y="122" width="4" height="132" rx="2" fill="#A8461F"/>
+<rect x="32" y="122" width="332" height="150" rx="10" fill="none" stroke="#E3E0D9"/>
+<rect x="32" y="122" width="4" height="150" rx="2" fill="#A8461F"/>
 <text x="56" y="178" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="42" font-weight="600" letter-spacing="-1" fill="#14161A">1.000</text>
 <text x="56" y="202" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11.5" font-weight="600" letter-spacing="0.06em" fill="#A8461F">LEAKY — IMP_LAST30 INCLUDED</text>
-<text x="56" y="228" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">The label is a ratio built from this column.</text>
-<rect x="396" y="122" width="332" height="132" rx="10" fill="none" stroke="#E3E0D9"/>
-<rect x="396" y="122" width="4" height="132" rx="2" fill="#2F4858"/>
+<text x="56" y="228" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">The label is a ratio built</text>
+<text x="56" y="246" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">from this exact column.</text>
+<rect x="396" y="122" width="332" height="150" rx="10" fill="none" stroke="#E3E0D9"/>
+<rect x="396" y="122" width="4" height="150" rx="2" fill="#2F4858"/>
 <text x="420" y="178" font-family="'Space Grotesk','Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="42" font-weight="600" letter-spacing="-1" fill="#14161A">0.486</text>
 <text x="420" y="202" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11.5" font-weight="600" letter-spacing="0.06em" fill="#2F4858">HONEST — PRIOR WINDOW ONLY</text>
-<text x="420" y="228" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">Worse than a coin flip. This is the one I reported.</text>
+<text x="420" y="228" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">Worse than a coin flip.</text>
+<text x="420" y="246" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="12" fill="#5B6670">This is the number I reported.</text>
 <line x1="32" y1="298" x2="728" y2="298" stroke="#E3E0D9" stroke-width="1"/>
 <text x="32" y="318" font-family="'Inter',system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11" fill="#5B6670">March 2026 partition · 46,016 content items after the availability filter.</text>
 </svg>
@@ -175,3 +182,4 @@ figure svg{display:block;width:100%;height:auto}
 </g>
 </svg>
 </figure>
+<figure><figcaption>OPEN · headshot.jpg — real photo, not yet supplied</figcaption><div class="pending">Deliberately empty. A generated portrait would fail the one criterion this slot exists to satisfy.</div></figure>

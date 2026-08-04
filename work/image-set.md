@@ -16,17 +16,17 @@ Mapped to the content map — hero, three cases, about, contact.
 |---|---|---|---|---|
 | 1 | Hero | Ruled-grid texture with a ranked queue | Generated (SVG, my palette) | ✅ `images/hero-texture.svg` |
 | 2 | Case 1 | Precision@50, four methods compared | Figure from my committed numbers | ✅ `images/fig-queue-precision.svg` |
-| 3 | Case 1 | Notebook capture — the results table in `w05_model` | **Real screenshot** | ⬜ you capture |
+| 3 | Case 1 | Notebook capture — the results table in `w05_model` | **Real screenshot** | ✅ `images/capture-w05-results.png` |
 | 4 | Case 2 | Leaky 1.000 vs honest 0.486 | Figure from my committed numbers | ✅ `images/fig-leaky-vs-honest.svg` |
-| 5 | Case 2 | Notebook capture — the two AUC prints in `w03_data_contract` | **Real screenshot** | ⬜ you capture |
+| 5 | Case 2 | Notebook capture — the two AUC prints in `w03_data_contract` | **Real screenshot** | ✅ `images/capture-w03-leakage.png` |
 | 6 | Case 3 | Decline rate by traffic volume | Figure from my committed numbers | ✅ `images/fig-volume-vs-decline.svg` |
 | 7 | About | Headshot | **Real photo** | ⬜ you supply |
 | 8 | Site-wide | Favicon / monogram | Generated (SVG) | ✅ `identity/favicon.svg` |
 | 9 | Site-wide | Wordmark | Generated (SVG) | ✅ `identity/logo-wordmark.svg` |
 
-Six of nine are done. The three open ones are the three that **cannot** be generated — two real
-captures and one real photo. That split is the point of the assignment, so I've left them open
-rather than filling them with something that looks close enough.
+Eight of nine are done. The one still open is the headshot, and it stays open until I have a real
+photo — that split is the point of the assignment, and filling it with something that looks close
+enough is the exact failure it's testing for.
 
 ---
 
@@ -45,10 +45,16 @@ These are **figures plotted from my results**, not screenshots and not AI images
 out because "AI-generated chart" and "chart drawn from real data" look identical at a glance, and
 the difference is the entire claim my portfolio makes.
 
-**Items 3 and 5 have to be actual screenshots** — a figure I drew is my rendering of my numbers; a
+**Items 3 and 5 are actual screenshots** — a figure I drew is my rendering of my numbers; a
 screenshot of the notebook is evidence the code ran and produced them. The figure is the legible
 version, the screenshot is the receipt. A case card gets the figure; the case body links the
 screenshot.
+
+Both were captured from the notebooks as they render on GitHub, then cropped to the cell and its
+output — no browser chrome, no file tree, no scaling up. They're worth checking against the
+figures: `capture-w05-results.png` reads `0.161499 / 0.180000 / 0.260000 / 0.620000`, which is the
+Case 1 table; `capture-w03-leakage.png` reads `60,333 | 46,016`, honest `0.486`, leaky `1.000`,
+which is Case 2. The receipts and the write-ups agree, which is the only reason to publish either.
 
 **Item 7 has to be a real photo of me.** A generated portrait on an About page is the one lie that
 invalidates everything around it — if the face is fake, a reader is entitled to assume the metrics
@@ -139,17 +145,18 @@ work/images/
   fig-queue-precision.svg        keeper · Case 1
   fig-leaky-vs-honest.svg        keeper · Case 2
   fig-volume-vs-decline.svg      keeper · Case 3
+  capture-w05-results.png        keeper · Case 1 receipt (1515x700, real capture)
+  capture-w03-leakage.png        keeper · Case 2 receipt (1530x760, real capture)
   hero-texture.svg               keeper · hero
   _rejected-hero-gradient.svg    rejected, kept as evidence
-  contact-sheet.html             all five, side by side
+  contact-sheet.html             the whole set, side by side
 work/identity/
   favicon.svg                    keeper · site-wide
   logo-wordmark.svg              keeper · site-wide
 ```
 
-**Still to capture:** two notebook screenshots (`w05_model` results table, `w03_data_contract` AUC
-prints) and one real headshot. Crop tight, keep the text legible at the width it'll actually be
-shown, and don't scale a screenshot up.
+**Still open:** the headshot. It goes in as `images/headshot.jpg` when I have a real photo, and not
+before.
 
 **One known limitation:** the SVGs name Space Grotesk and Inter with a system fallback, so they'll
 render in a substitute face anywhere those fonts aren't loaded. Fine on the site, where the kit
