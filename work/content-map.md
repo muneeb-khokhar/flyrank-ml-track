@@ -60,7 +60,7 @@ the reader who wants depth before emailing.
 | # | Section | Contains | Image |
 |---|---|---|---|
 | 1 | Hero | The claim, one supporting line, primary CTA | `hero-texture.svg` |
-| 2 | **Case 1 summary** — The review queue that beat the rule | Title, one-line summary, the comparison as **"31 of the top 50 vs the rule's 9, same split"** (not a bare `0.620` — see note below), three beats compressed to one line each, "Read the full case →" | `fig-queue-precision.svg` |
+| 2 | **Case 1 summary** — The review queue that beat the rule | Title, one-line summary, the LOCO headline as **"21 of 24 held-out clients, 2.28× mean lift"** (never a single-split decimal — see note below), three beats compressed to one line each, "Read the full case →" | `fig-queue-precision.svg` |
 | 3 | Case 2 summary — The model that scored 1.000 and was worthless | Same shape, stat pair `1.000 / 0.486` | `fig-leaky-vs-honest.svg` |
 | 4 | Case 3 summary — Two assumptions behind the rule, tested | Same shape, stat pair `0.342 → 0.204` | `fig-volume-vs-decline.svg` |
 | 5 | About (short) | Three sentences from the bio + headshot | `headshot.jpg` |
@@ -68,18 +68,19 @@ the reader who wants depth before emailing.
 
 **CTA:** *Email me* — in the hero and repeated at section 6. Twice on the page, nowhere else.
 
-**Why Case 1 leads:** it's the only case that proves delivery *and* judgment in one story — the
-forest put 31 of the top 50 right against the rule's 9, and then I found a feature that was
-measuring nothing. Case 2 is the sharper story about honesty, but as an opener it asks the reader to
-admire a failure before they know I can ship. It earns much more in position 3, once Case 1 has
+**Why Case 1 leads:** it carries the whole three-act validation story in one case — I caught a
+target leak, then found my own "final" metric was unstable and rebuilt evaluation as
+leave-one-client-out, then found the rebuilt evaluation had its own silent reproducibility bug and
+pinned the window. Case 2 is the sharper single story about honesty, but as an opener it asks the
+reader to admire a failure before they know I can ship. It earns more in position 3, once Case 1 has
 bought the credibility.
 
-**No bare `0.620` anywhere on the site.** That figure comes from a single `GroupShuffleSplit` at
-seed 42, and its stability across seeds and across held-out clients is untested. A single-seed
-decimal in the highest-visibility slot on the page is precisely the failure this whole portfolio
-claims to catch, so the cards carry the *comparison* — 31 versus 9 on the same split — and the case
-page carries the number with its caveat attached. When the multi-seed and leave-one-client-out runs
-exist, the honest range replaces the single figure; until then nothing quotes it alone.
+**No single-split decimal anywhere on the site.** `0.500` on one seed-42 split became `0.30–0.62`
+across seven seeds — it was one draw, not a measurement. So the cards and the hero carry the LOCO
+result (21 of 24 held-out clients, 2.28× mean lift), and the single-split table appears only inside
+the case page, explicitly labelled as the thing that *prompted* the audit rather than a co-equal
+result. The through-line for the whole site: **every number that follows exists because an earlier
+number made me suspicious of itself.**
 
 ### Page 2 — Case 1 `/cases/review-queue`
 
@@ -88,8 +89,8 @@ exist, the honest range replaces the single figure; until then nothing quotes it
 | 1 | Title + stat pair + one-line summary |
 | 2 | The problem |
 | 3 | What I did, and what I decided — the three defended decisions |
-| 4 | What came of it — the four-row Precision@50 table |
-| 5 | The receipt — `capture-w05-results.png`, the notebook output |
+| 4 | What came of it — LOCO first (21/24, 2.28×, 10 outside the 95% band all positive), then the single-split table labelled as the trigger, then the date-pinning bug |
+| 5 | The receipts — `capture-w05-results.png` (**must be re-captured post-pin**) and the `w06` LOCO output once committed |
 | 6 | What this doesn't say |
 | 7 | CTA |
 
@@ -144,8 +145,8 @@ Honest list, so build week isn't blocked by a surprise.
 
 | Item | For | Blocker |
 |---|---|---|
-| Deployed site URL | Everything | Build week |
-| Domain or GitHub Pages URL | Nav, contact | Not chosen yet |
+| ~~Deployed site URL~~ | Everything | **Done** — live at `https://muneeb-khokhar.github.io/`, verified on a second device |
+| Custom domain | Nav, contact | Optional; the github.io URL is fine for now |
 | `favicon.ico` fallback | Older browsers | 5 minutes from the SVG |
 | Monogram converted to outlines | The mark rendering off-site | Space Grotesk isn't loaded outside the site |
 
@@ -153,9 +154,10 @@ Honest list, so build week isn't blocked by a surprise.
 
 | Item | For | Status |
 |---|---|---|
-| **Multi-seed sweep of Case 1's split** | Case 1 — replaces the single-seed 0.620 with a range | **Blocking.** Nothing on the site may quote 0.620 alone until this exists. Needs `w05_model` re-run across several `random_state` values |
-| **Leave-one-client-out run** | Case 1 — the honest headline | Not started. `GroupShuffleSplit` at one seed is one draw of clients; LOCO is the version that survives a reviewer |
-| **Count of distinct clients in the test split** | Case 1's "what this doesn't say" | Never recorded. Decides whether 21,610 rows is a large sample or a small one in disguise — one query |
+| **Re-run `w05_model` under the pinned window** | Case 1's single-split table, and the screenshot | **Blocking.** The committed notebook and `capture-w05-results.png` still show the pre-pin `0.180 / 0.620`; the case now reports `0.200 / 0.500`. A receipt that disagrees with the write-up is worse than none |
+| **Re-capture `capture-w05-results.png`** | Case 1 | Follows directly from the re-run above |
+| **Run `w06_validation_audit` and commit its outputs** | Case 1's LOCO headline | The 21/24 and 2.28× figures are stated in the case but have no committed output behind them yet. The notebook is written; it needs one Colab run |
+| **FlyRank policy on per-client detail** | Whether the LOCO table can be shown at all | **External blocker — ask a person, don't assume.** If per-client rows can't be published, the LOCO section becomes an aggregate finding described rather than shown, which reshapes the case page |
 | **Case 4** — validation audit | A fourth case, or depth on Case 1 | ML-09 not started. The three rows above are its natural content |
 | **Case 5** — the action playbook | Would be the most "hireable" case: model → recommendation | ML-10 not started |
 | **Capstone paper + deployed URL** | The strongest single link on the site | Not written; `submission/paper_url.txt` is still the placeholder |

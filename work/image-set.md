@@ -50,10 +50,15 @@ version, the screenshot is the receipt. A case card gets the figure; the case bo
 screenshot.
 
 Both were captured from the notebooks as they render on GitHub, then cropped to the cell and its
-output — no browser chrome, no file tree, no scaling up. They're worth checking against the
-figures: `capture-w05-results.png` reads `0.161499 / 0.180000 / 0.260000 / 0.620000`, which is the
-Case 1 table; `capture-w03-leakage.png` reads `60,333 | 46,016`, honest `0.486`, leaky `1.000`,
-which is Case 2. The receipts and the write-ups agree, which is the only reason to publish either.
+output — no browser chrome, no file tree, no scaling up. `capture-w03-leakage.png` reads
+`60,333 | 46,016`, honest `0.486`, leaky `1.000`, which matches Case 2 exactly.
+
+**`capture-w05-results.png` is currently a stale receipt and must be re-captured.** It shows
+`0.180 / 0.620` — the pre-pin run, taken before `MAX(report_date)` was replaced with a hardcoded
+`2026-03-31`. Case 1 now reports the post-pin figures (`0.200 / 0.500`) and leads with LOCO. Until
+`w05_model` is re-run under the pinned window and re-captured, this image contradicts the case it
+is supposed to evidence. A receipt that disagrees with the write-up is worse than no receipt: it
+looks like the write-up was tuned after the fact. Re-run, re-capture, replace.
 
 **Item 7 is a real photo of me.** A generated portrait on an About page is the one lie that
 invalidates everything around it — if the face is fake, a reader is entitled to assume the metrics

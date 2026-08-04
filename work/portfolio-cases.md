@@ -89,31 +89,43 @@ because the rule's failure was specifically about combining signals, and that's 
 
 ### What came of it
 
-Same test split, same metric, all four ranked side by side — **one split, seed 42**:
+**The headline is leave-one-client-out.** Every client held out in turn, the model trained on the
+other 23 and scored on the one it had never seen:
 
-| Method | Precision@50 (single split, seed 42) |
+| Leave-one-client-out, 24 clients | |
+|---|---|
+| Clients beating their own base rate | **21 of 24** |
+| Mean lift over base rate | **2.28×** |
+| Clients outside the 95% band | 10, against ~1 expected — and all 10 positive |
+
+That last row is the one I'd defend hardest. If the ranking were noise you'd expect roughly one
+client to fall outside the band by chance, and you'd expect the strays to land on both sides. Ten
+landed outside, all in the same direction. That's a pattern, not a fluke.
+
+**The single-split table is not a co-equal result. It's the thing that made me suspicious.**
+
+| Method | Precision@50 — one split, seed 42 |
 |---|---:|
 | Random order (test base rate) | 0.161 |
-| The hand-written rule | 0.180 |
+| The hand-written rule | 0.200 |
 | Logistic regression | 0.260 |
-| Random forest | 0.620 |
+| Random forest | 0.500 |
 
-Read as counts: of the top 50 pages, the forest got 31 right, the rule got 9, and shuffling the list
-got 8. On this split the forest scored 3.44× the rule.
+I originally reported that 0.500 as the result. Then I ran the same split design across seven seeds
+and got **0.30 to 0.62**. The number hadn't moved because the model changed — it moved because a
+different set of clients happened to land on the test side, and pages within a client move together.
+One split was never a measurement; it was one draw I'd mistaken for one.
 
-**The caveat belongs beside that number, not under it.** 0.620 is one draw.
-`GroupShuffleSplit(random_state=42)` assigns one particular set of clients to the test side, and
-because pages within a client move together, changing the seed moves the whole table — not just the
-last row. I have not run the split across multiple seeds, so I do not know the spread around 0.620.
-I know only that a spread exists, because my own read of this table says the base rate is "a
-property of whichever clients landed in test under this seed." I also never recorded how many
-distinct clients ended up in the test side, which is the number that decides whether 21,610 rows is
-a large sample or a small one wearing a large sample's clothes.
+So the table above appears here as the trigger for the audit, explicitly labelled unstable, and LOCO
+is what I stand behind. Every number that follows in this case exists because an earlier number made
+me suspicious of itself.
 
-So the defensible claim here is the **comparison**, not the decimal: on the same split, with the
-same metric, the learned ranking beat the hand-written rule and beat random order. Quoting 0.620 as
-"the model's score" would be reporting one draw as though it were the distribution — and a
-single-seed number in a headline is exactly the kind of thing I'd catch in someone else's work.
+**And then the audit had its own bug.** Before I pinned the extraction window, LOCO showed 22 of 24
+and 2.37×; after pinning to `2026-03-31`, 21 of 24 and 2.28×. Same LOCO code, same seed, nothing
+else changed — so I attribute the difference to partition drift, `MAX(report_date)` resolving
+against a warehouse that had moved under me. **I can't verify that.** I never logged what the window
+resolved to on the earlier run, so I can only infer the cause from the fact that nothing else
+differed. That missing log is itself the defect, and it's exactly what the pinning fixes.
 
 Then the part I'd actually talk about in an interview. At a 0.8 confidence threshold the model had
 zero confident mistakes, which made me suspicious rather than pleased. I dropped the threshold to
@@ -129,10 +141,13 @@ That's a limitation of my feature table, not a quirk of the model, and it's the 
 refreshing a page recovers its traffic — that needs an experiment I haven't run. It ranks pages for
 a human to look at.
 
-It also doesn't say the model scores 0.620. It says that on one client-grouped split with seed 42 it
-scored 0.620, that the rule scored 0.180 on that same split, and that the stability of both across
-seeds and across held-out clients is **untested**. The outstanding checks are a multi-seed sweep and
-a leave-one-client-out run; until those exist, the comparison stands and the decimal doesn't.
+It also doesn't say the model scores 0.500, or 0.620, or any single number. On one seed-42 split it
+scored 0.500; across seven seeds of that same design, 0.30 to 0.62. The claim I'll defend is the
+LOCO one — 21 of 24 held-out clients beat their own base rate at a mean lift of 2.28× — because
+that's the only version where every client got tested rather than one lucky draw of them.
+
+And the date-drift explanation is a hypothesis, not a finding. I can't prove partition drift caused
+the 22/24 → 21/24 shift, only that nothing else changed.
 
 ---
 
@@ -293,9 +308,9 @@ One action, one address, on every page. No form, no calendar link, no newsletter
 
 **After — my edit:**
 
-> I built a ranked review queue for a content team with 120,000 pages and time for fifty. On a
-> client-grouped test split, 31 of the top 50 pages my model picked were genuinely declining. The
-> hand-written rule it replaced got 9. Then I found the broken feature the model had been ignoring.
+> I built a ranked review queue for a content team with 120,000 pages and time for fifty. Held out
+> one client at a time, it beat that client's own base rate for 21 of 24 clients, averaging 2.28×.
+> I report that instead of my first number, which looked better and turned out to be one lucky split.
 
 What changed and why:
 
@@ -305,10 +320,12 @@ What changed and why:
   word you use when you don't have the number.
 - **"Unlock measurable SEO growth"** → cut entirely. I didn't measure growth. I measured queue
   precision. Claiming growth is claiming an experiment I never ran.
-- **Added the split.** 0.620 without "client-grouped test split" is a number I could have got by
-  cheating, and any reviewer worth working for will assume I did.
-- **Added the failure.** The broken-feature sentence is the only line in the paragraph that a
-  generic draft would never produce, and it's the one that says something true about how I work.
+- **Named the validation design.** "Held out one client at a time" is the difference between a
+  number a reviewer can check and one they have to take on faith. A bare decimal with no split named
+  is a number any reviewer worth working for will assume was cherry-picked.
+- **Reported the worse number.** The last sentence is the only line a generic draft would never
+  produce — no AI first draft volunteers that its headline figure was one lucky split. It's also the
+  only line that says something true about how I work.
 
 **Words cut from the whole document on the read-aloud pass:** passionate, journey, robust,
 state-of-the-art, deep dive, actionable insights, game-changing, empowering, holistic, synergy,
