@@ -468,9 +468,14 @@ checklist instead of an assurance. That's the sixth rung, and it's the one the F
 
 ## Cross-model comparison
 
-Same prompt, both models, no edits between runs. Claude: Opus 5. ChatGPT: whatever
-`chatgpt.com` served as default in August 2026 — I didn't capture the model version, which is a gap
-in my method rather than in the result.
+Same prompt, both models, no edits between runs. Claude: Opus 5. ChatGPT: the free tier, on whatever
+model `chatgpt.com` serves logged-in free accounts by default (August 2026) — I didn't record the
+exact version.
+
+That asymmetry is worth stating plainly rather than hiding: this is a paid frontier model against a
+free-tier one, so it is not a like-for-like capability test. It is still the comparison that matters
+to me, because the free tier is what I would actually reach for on a Tuesday, and the failure it
+produced is the kind I need to know about regardless of which model caused it.
 
 ### The finding that matters
 
