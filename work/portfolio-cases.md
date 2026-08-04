@@ -99,7 +99,7 @@ Same test split, same metric, all four ranked side by side:
 | Random forest | **0.620** |
 
 Read as counts: of the top 50 pages, the forest got 31 right, the rule got 9, and shuffling the list
-got 8. The rule was barely better than random — about 3.4× worse than the forest on the same 21,610
+got 8. The rule was barely better than random. The forest scored 3.44× the rule on the same 21,610
 test pages.
 
 Then the part I'd actually talk about in an interview. At a 0.8 confidence threshold the model had
@@ -181,7 +181,7 @@ fails here, no amount of modelling downstream repairs it.
 
 ### What came of it
 
-**Staleness — doesn't rise cleanly.**
+**Staleness — doesn't rise cleanly, and the table is smaller than it looks.**
 
 | Days since update | Decline rate | Pages |
 |---|---:|---:|
@@ -189,10 +189,20 @@ fails here, no amount of modelling downstream repairs it.
 | 91–180 | 0.270 | 278 |
 | 181–365 | 0.983 | 1,277 |
 
-The 181–365 bucket is almost entirely declining, which supports the rule. But the middle bucket
-drops below the freshest bucket, and it holds 278 pages against 29,601. I'd call that **mixed**, not
-confirmed — the shape is dominated by how few pages sit in the middle, and the freshest bucket
-declining at 43% is not what the rule predicts at all.
+Read the Pages column before the Decline rate column. Those three buckets hold 31,156 pages — **26%
+of the 120,507 I started with.** The other 89,351 have a negative `days_since_update`, so `pd.cut`
+dropped them to `NaN` and the group-by silently discarded three-quarters of my data without raising
+anything.
+
+That's the same broken feature from Case 1, showing up somewhere I wasn't looking for it. In Case 1
+it cost me three wrong predictions. Here it quietly deleted most of the evidence, and the table still
+rendered and still looked like a finding.
+
+On what's left: the 181–365 bucket is almost entirely declining, which supports the rule. But the
+middle bucket drops below the freshest bucket while holding 278 pages against 29,601. I'd call that
+**mixed**, not confirmed — and I'd weight it lightly, because a test run on a quarter of the rows,
+where the exclusion is caused by a defect rather than by chance, isn't a sample I can reason about.
+The honest verdict on staleness is *not yet tested*.
 
 **Traffic volume — runs backwards.**
 
@@ -203,16 +213,19 @@ declining at 43% is not what the rule predicts at all.
 | Good | 0.226 | 33,175 |
 | Excellent | 0.204 | 14,908 |
 
-Monotonic, across 120,507 pages, in the opposite direction to the assumption. High-traffic pages
-decline *less*. So the "visible" half of the rule isn't finding pages at risk — it's finding the
-pages least likely to be at risk, and it's doing it consistently.
+This one is whole: those four buckets sum to 120,507, every row accounted for. And it's monotonic in
+the opposite direction to the assumption. High-traffic pages decline *less*. So the "visible" half of
+the rule isn't finding pages at risk — it's finding the pages least likely to be at risk, and it's
+doing it consistently across the full dataset.
 
 That reframes what the rule is for. It isn't a risk filter, it's a value filter: it says "if this
 page does slip, it matters." That's a defensible thing to want. It's just not what the rule was
 described as doing, and the difference changes how you'd tune it.
 
 **What this doesn't say:** these are observed associations on two months of one panel. Declining
-pages aren't declining *because* of their traffic level, and I haven't controlled for anything.
+pages aren't declining *because* of their traffic level, and I haven't controlled for anything. The
+volume result stands on all 120,507 rows; the staleness result stands on 26% of them and should be
+re-run once `days_since_update` is fixed.
 
 ---
 
