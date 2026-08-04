@@ -20,13 +20,12 @@ Mapped to the content map — hero, three cases, about, contact.
 | 4 | Case 2 | Leaky 1.000 vs honest 0.486 | Figure from my committed numbers | ✅ `images/fig-leaky-vs-honest.svg` |
 | 5 | Case 2 | Notebook capture — the two AUC prints in `w03_data_contract` | **Real screenshot** | ✅ `images/capture-w03-leakage.png` |
 | 6 | Case 3 | Decline rate by traffic volume | Figure from my committed numbers | ✅ `images/fig-volume-vs-decline.svg` |
-| 7 | About | Headshot | **Real photo** | ⬜ you supply |
+| 7 | About | Headshot | **Real photo** | ✅ `images/headshot.jpg` |
 | 8 | Site-wide | Favicon / monogram | Generated (SVG) | ✅ `identity/favicon.svg` |
 | 9 | Site-wide | Wordmark | Generated (SVG) | ✅ `identity/logo-wordmark.svg` |
 
-Eight of nine are done. The one still open is the headshot, and it stays open until I have a real
-photo — that split is the point of the assignment, and filling it with something that looks close
-enough is the exact failure it's testing for.
+All nine are done. Three of them — the two notebook captures and the headshot — could only ever be
+real, and that split is the point of the assignment.
 
 ---
 
@@ -56,9 +55,16 @@ figures: `capture-w05-results.png` reads `0.161499 / 0.180000 / 0.260000 / 0.620
 Case 1 table; `capture-w03-leakage.png` reads `60,333 | 46,016`, honest `0.486`, leaky `1.000`,
 which is Case 2. The receipts and the write-ups agree, which is the only reason to publish either.
 
-**Item 7 has to be a real photo of me.** A generated portrait on an About page is the one lie that
+**Item 7 is a real photo of me.** A generated portrait on an About page is the one lie that
 invalidates everything around it — if the face is fake, a reader is entitled to assume the metrics
-are too. Bad light and a plain wall beat a flawless synthetic face.
+are too.
+
+I picked between two real photos rather than reaching for a generator. The first had sunglasses and
+a saturated red studio background: better lit, and wrong twice over — an About photo exists so a
+stranger can put a face to the work, which hidden eyes defeat, and a red field would have been the
+loudest thing on a page whose palette is built to make the numbers loudest. The one I kept is a
+phone photo in daylight, cropped to head-and-shoulders so the parked car and roadworks behind me
+fall outside the frame. Worse photo, right photo.
 
 ---
 
@@ -147,6 +153,7 @@ work/images/
   fig-volume-vs-decline.svg      keeper · Case 3
   capture-w05-results.png        keeper · Case 1 receipt (1515x700, real capture)
   capture-w03-leakage.png        keeper · Case 2 receipt (1530x760, real capture)
+  headshot.jpg                   keeper · About (1000x1221, real photo)
   hero-texture.svg               keeper · hero
   _rejected-hero-gradient.svg    rejected, kept as evidence
   contact-sheet.html             the whole set, side by side
@@ -155,8 +162,8 @@ work/identity/
   logo-wordmark.svg              keeper · site-wide
 ```
 
-**Still open:** the headshot. It goes in as `images/headshot.jpg` when I have a real photo, and not
-before.
+Nothing outstanding. The full-resolution original of the headshot is kept outside the repo — the
+committed file is the cropped 202 KB version, because a 7 MB phone photo has no business in git.
 
 **One known limitation:** the SVGs name Space Grotesk and Inter with a system fallback, so they'll
 render in a substitute face anywhere those fonts aren't loaded. Fine on the site, where the kit
