@@ -89,18 +89,31 @@ because the rule's failure was specifically about combining signals, and that's 
 
 ### What came of it
 
-Same test split, same metric, all four ranked side by side:
+Same test split, same metric, all four ranked side by side — **one split, seed 42**:
 
-| Method | Precision@50 |
+| Method | Precision@50 (single split, seed 42) |
 |---|---:|
 | Random order (test base rate) | 0.161 |
 | The hand-written rule | 0.180 |
 | Logistic regression | 0.260 |
-| Random forest | **0.620** |
+| Random forest | 0.620 |
 
 Read as counts: of the top 50 pages, the forest got 31 right, the rule got 9, and shuffling the list
-got 8. The rule was barely better than random. The forest scored 3.44× the rule on the same 21,610
-test pages.
+got 8. On this split the forest scored 3.44× the rule.
+
+**The caveat belongs beside that number, not under it.** 0.620 is one draw.
+`GroupShuffleSplit(random_state=42)` assigns one particular set of clients to the test side, and
+because pages within a client move together, changing the seed moves the whole table — not just the
+last row. I have not run the split across multiple seeds, so I do not know the spread around 0.620.
+I know only that a spread exists, because my own read of this table says the base rate is "a
+property of whichever clients landed in test under this seed." I also never recorded how many
+distinct clients ended up in the test side, which is the number that decides whether 21,610 rows is
+a large sample or a small one wearing a large sample's clothes.
+
+So the defensible claim here is the **comparison**, not the decimal: on the same split, with the
+same metric, the learned ranking beat the hand-written rule and beat random order. Quoting 0.620 as
+"the model's score" would be reporting one draw as though it were the distribution — and a
+single-seed number in a headline is exactly the kind of thing I'd catch in someone else's work.
 
 Then the part I'd actually talk about in an interview. At a 0.8 confidence threshold the model had
 zero confident mistakes, which made me suspicious rather than pleased. I dropped the threshold to
@@ -113,8 +126,13 @@ its weight on prior-window impression volume (0.047).
 That's a limitation of my feature table, not a quirk of the model, and it's the first thing I'd fix.
 
 **What this doesn't say:** it doesn't predict Google's ranking algorithm, and it doesn't show that
-refreshing a page recovers its traffic. That needs an experiment I haven't run. It ranks pages for a
-human to look at.
+refreshing a page recovers its traffic — that needs an experiment I haven't run. It ranks pages for
+a human to look at.
+
+It also doesn't say the model scores 0.620. It says that on one client-grouped split with seed 42 it
+scored 0.620, that the rule scored 0.180 on that same split, and that the stability of both across
+seeds and across held-out clients is **untested**. The outstanding checks are a multi-seed sweep and
+a leave-one-client-out run; until those exist, the comparison stands and the decimal doesn't.
 
 ---
 

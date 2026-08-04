@@ -60,7 +60,7 @@ the reader who wants depth before emailing.
 | # | Section | Contains | Image |
 |---|---|---|---|
 | 1 | Hero | The claim, one supporting line, primary CTA | `hero-texture.svg` |
-| 2 | **Case 1 summary** — The review queue that beat the rule | Title, one-line summary, stat pair `0.620 / 0.180`, three beats compressed to one line each, "Read the full case →" | `fig-queue-precision.svg` |
+| 2 | **Case 1 summary** — The review queue that beat the rule | Title, one-line summary, the comparison as **"31 of the top 50 vs the rule's 9, same split"** (not a bare `0.620` — see note below), three beats compressed to one line each, "Read the full case →" | `fig-queue-precision.svg` |
 | 3 | Case 2 summary — The model that scored 1.000 and was worthless | Same shape, stat pair `1.000 / 0.486` | `fig-leaky-vs-honest.svg` |
 | 4 | Case 3 summary — Two assumptions behind the rule, tested | Same shape, stat pair `0.342 → 0.204` | `fig-volume-vs-decline.svg` |
 | 5 | About (short) | Three sentences from the bio + headshot | `headshot.jpg` |
@@ -73,6 +73,13 @@ forest put 31 of the top 50 right against the rule's 9, and then I found a featu
 measuring nothing. Case 2 is the sharper story about honesty, but as an opener it asks the reader to
 admire a failure before they know I can ship. It earns much more in position 3, once Case 1 has
 bought the credibility.
+
+**No bare `0.620` anywhere on the site.** That figure comes from a single `GroupShuffleSplit` at
+seed 42, and its stability across seeds and across held-out clients is untested. A single-seed
+decimal in the highest-visibility slot on the page is precisely the failure this whole portfolio
+claims to catch, so the cards carry the *comparison* — 31 versus 9 on the same split — and the case
+page carries the number with its caveat attached. When the multi-seed and leave-one-client-out runs
+exist, the honest range replaces the single figure; until then nothing quotes it alone.
 
 ### Page 2 — Case 1 `/cases/review-queue`
 
@@ -146,7 +153,10 @@ Honest list, so build week isn't blocked by a surprise.
 
 | Item | For | Status |
 |---|---|---|
-| **Case 4** — validation audit | A fourth case, or depth on Case 1 | ML-09 not started |
+| **Multi-seed sweep of Case 1's split** | Case 1 — replaces the single-seed 0.620 with a range | **Blocking.** Nothing on the site may quote 0.620 alone until this exists. Needs `w05_model` re-run across several `random_state` values |
+| **Leave-one-client-out run** | Case 1 — the honest headline | Not started. `GroupShuffleSplit` at one seed is one draw of clients; LOCO is the version that survives a reviewer |
+| **Count of distinct clients in the test split** | Case 1's "what this doesn't say" | Never recorded. Decides whether 21,610 rows is a large sample or a small one in disguise — one query |
+| **Case 4** — validation audit | A fourth case, or depth on Case 1 | ML-09 not started. The three rows above are its natural content |
 | **Case 5** — the action playbook | Would be the most "hireable" case: model → recommendation | ML-10 not started |
 | **Capstone paper + deployed URL** | The strongest single link on the site | Not written; `submission/paper_url.txt` is still the placeholder |
 | Live demo of the ranked queue | Hero, Case 1 | Doesn't exist — would need a hosted app, not planned |
