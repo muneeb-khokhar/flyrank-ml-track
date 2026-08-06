@@ -36,7 +36,7 @@ output:
 
 | Figure | Numbers come from |
 |---|---|
-| `fig-queue-precision` | `w05_model.ipynb` — 0.161 / 0.180 / 0.260 / 0.620 on the 21,610-row grouped split |
+| `fig-queue-precision` | `w05_model.ipynb` — 0.161 / 0.100 / 0.260 / 0.540 on the 21,610-row grouped split, seed 42 |
 | `fig-leaky-vs-honest` | `w03_data_contract.ipynb` — 1.000 leaky, 0.486 honest, 46,016 items |
 | `fig-volume-vs-decline` | `w04_baseline_score.ipynb` — four buckets summing to all 120,507 pages |
 
@@ -140,7 +140,7 @@ a486771 Initial commit
 
 They came with the starter template. They're the reference pipeline's output on the bundled 30k
 sample, not my work — and the numbers in them (Precision@50 0.240 → 0.740) are not my numbers,
-which are 0.180 → 0.620 on a different split of a different dataset.
+which are 0.100 → 0.540 on a different split of a different dataset.
 
 Using them would have been the single most damaging thing in this whole set: real-looking captures
 of results I didn't produce, on a portfolio that argues I'm careful about exactly this. They're
