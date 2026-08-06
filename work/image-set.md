@@ -53,12 +53,11 @@ Both were captured from the notebooks as they render on GitHub, then cropped to 
 output — no browser chrome, no file tree, no scaling up. `capture-w03-leakage.png` reads
 `60,333 | 46,016`, honest `0.486`, leaky `1.000`, which matches Case 2 exactly.
 
-**`capture-w05-results.png` is currently a stale receipt and must be re-captured.** It shows
-`0.180 / 0.620` — the pre-pin run, taken before `MAX(report_date)` was replaced with a hardcoded
-`2026-03-31`. Case 1 now reports the post-pin figures (`0.200 / 0.500`) and leads with LOCO. Until
-`w05_model` is re-run under the pinned window and re-captured, this image contradicts the case it
-is supposed to evidence. A receipt that disagrees with the write-up is worse than no receipt: it
-looks like the write-up was tuned after the fact. Re-run, re-capture, replace.
+`capture-w05-results.png` reads `0.161499 / 0.100000 / 0.260000 / 0.540000`, which is Case 1's
+single-split table exactly. It was re-captured after the window pin and the `ORDER BY` fix — the
+earlier version showed `0.180 / 0.620` from a run that predated both, and a receipt that disagrees
+with the write-up is worse than no receipt, because it reads as the write-up being tuned after the
+fact. Both receipts now match their cases.
 
 **Item 7 is a real photo of me.** A generated portrait on an About page is the one lie that
 invalidates everything around it — if the face is fake, a reader is entitled to assume the metrics
