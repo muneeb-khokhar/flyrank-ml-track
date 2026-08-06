@@ -99,9 +99,9 @@ of [`w06_validation_audit.ipynb`](notebooks/w06_validation_audit.ipynb), over a 
 | Clients in the panel | 36 |
 | Clients scoreable (≥50 rows, both classes present) | 24 |
 | **Scoreable clients beating their own base rate** | **21 of 24** |
-| **Mean lift over each client's own base rate** | **2.17×** (median 1.78×) |
-| Mean Precision@50 across held-out clients | 0.291 (median 0.240) |
-| Range across clients | 0.04 – 0.72 |
+| **Mean lift over each client's own base rate** | **2.31×** (median 1.79×) |
+| Mean Precision@50 across held-out clients | 0.295 (median 0.270) |
+| Range across clients | 0.04 – 0.78 |
 
 Lift is the column that matters. Absolute Precision@50 varies hugely between clients because their
 base rates do — a client where 1.6% of pages decline cannot produce the same P@50 as one where 50%
@@ -119,14 +119,14 @@ report 36 and 24 separately instead of quietly using the smaller number as the d
 | Method | Precision@50 — one split, seed 42 |
 |---|---:|
 | Random order (test base rate) | 0.161 |
-| The hand-written rule | 0.160 |
+| The hand-written rule | 0.100 |
 | Logistic regression | 0.260 |
-| Random forest | 0.600 |
+| Random forest | 0.540 |
 
 That split put **9 clients** on the test side. Nine. 21,610 rows sounds like plenty until you notice
 the split is really a draw of nine clients, and pages within a client move together.
 
-So I ran the same design across seven seeds: **0.34 to 0.66, mean 0.509, sd 0.111** — and every one
+So I ran the same design across seven seeds: **0.24 to 0.58, mean 0.486, sd 0.112** — and every one
 of those splits also held exactly nine clients. The model never changed. Only which nine landed on
 the test side. A number that swings by 0.32 on the draw was never a measurement.
 
@@ -138,7 +138,7 @@ so a page edited after the window closes comes out negative — **65,211 of 81,4
 an edge case: for four fifths of the panel the feature describes an edit that hadn't happened at
 decision time. The two groups differ in decline rate (0.165 where negative, 0.214 where not), so
 it's structured error, not noise. Dropping the feature entirely raised the seed-sweep mean from
-**0.509 to 0.566**. It wasn't dead weight, it was a thumb on the scale.
+**0.486 to 0.546**. It wasn't dead weight, it was a thumb on the scale.
 
 **Then the audit had its own bug — twice.**
 
@@ -148,12 +148,17 @@ partition drift — **and I can't prove it**, because I never logged what the ol
 That missing log is itself the defect. The window is now hardcoded and printed into every notebook's
 output.
 
-Second, and I only caught this by comparing two notebooks that should have agreed: `w05` reports
-0.600 for the seed-42 split and `w06` reports 0.620. Same seed, same 81,446 rows, same split design.
-The cause is that DuckDB gives no row-order guarantee without an `ORDER BY`, and `GroupShuffleSplit`
-works on positional indices — so a fixed seed on an unordered frame is not actually reproducible. The
-queries now sort by `(client_hash_id, content_hash_id)`. One confirming re-run is outstanding; until
-it lands, treat 0.600 and 0.620 as the same number measured twice through a defect I've since fixed.
+Second, and I only caught this by comparing two notebooks that should have agreed: `w05` reported
+0.600 for the seed-42 split while `w06` reported 0.620. Same seed, same 81,446 rows, same split
+design. The cause is that DuckDB gives no row-order guarantee without an `ORDER BY`, and
+`GroupShuffleSplit` works on positional indices — so a fixed seed over an unordered frame isn't
+reproducible at all. Every earlier number for that split, mine included, was one arbitrary draw
+wearing a fixed seed's clothing.
+
+The queries now sort by `(client_hash_id, content_hash_id)`. **Both notebooks were re-run and both
+now report 0.540** — the first value for this split that should reproduce on demand. That's the test
+worth holding me to: not "I fixed it", but "two notebooks that disagreed now agree, and here are
+both outputs."
 
 Then the part I'd actually talk about in an interview. At a 0.8 confidence threshold the model had
 zero confident mistakes, which made me suspicious rather than pleased. I dropped the threshold to
@@ -169,9 +174,9 @@ That's a limitation of my feature table, not a quirk of the model, and it's the 
 refreshing a page recovers its traffic — that needs an experiment I haven't run. It ranks pages for
 a human to look at.
 
-It also doesn't say the model scores 0.600, or any single number. Across seven seeds of that same
-split design it ranged 0.34 to 0.66. The claim I'll defend is the LOCO one — 21 of 24 scoreable
-held-out clients beat their own base rate at a mean lift of 2.17× — because that's the only version
+It also doesn't say the model scores 0.540, or any single number. Across seven seeds of that same
+split design it ranged 0.24 to 0.58. The claim I'll defend is the LOCO one — 21 of 24 scoreable
+held-out clients beat their own base rate at a mean lift of 2.31× — because that's the only version
 where every client got tested rather than one draw of nine of them.
 
 It also doesn't cover the 12 clients too small or too one-sided to score. Whatever the model does on
@@ -341,7 +346,7 @@ One action, one address, on every page. No form, no calendar link, no newsletter
 
 > I built a ranked review queue for a content team with 120,000 pages and time for fifty. Held out
 > one client at a time, it beat that client's own base rate for 21 of 24 scoreable clients, averaging
-> 2.17×. I report that instead of my first number, which looked better and turned out to be a draw of
+> 2.31×. I report that instead of my first number, which looked better and turned out to be a draw of
 > nine clients.
 
 What changed and why:
