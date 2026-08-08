@@ -1,0 +1,176 @@
+{
+  "action_counts": {
+    "diagnose_before_editing": 6591,
+    "manual_diagnostic_review": 8443,
+    "manual_refresh_review": 16,
+    "monitor_and_collect_data": 7997,
+    "review_content_experience": 2324,
+    "review_depth_and_intent": 69,
+    "review_serp_snippet_and_intent": 4560
+  },
+  "archetype_counts": {
+    "ctr_opportunity": 4560,
+    "decline_risk_review": 8443,
+    "engagement_gap": 2324,
+    "limited_signal": 7997,
+    "protect_winner": 6591,
+    "stale_visible": 16,
+    "thin_visible": 69
+  },
+  "artifact": "w07_content_action_playbook",
+  "clients": 32,
+  "intended_use": "within-client human review prioritisation; non-production",
+  "label_or_future_inputs_used": [],
+  "monitor_reference": {
+    "action_share": {
+      "diagnose_before_editing": 0.2197,
+      "manual_diagnostic_review": 0.2814,
+      "manual_refresh_review": 0.0005,
+      "monitor_and_collect_data": 0.2666,
+      "review_content_experience": 0.0775,
+      "review_depth_and_intent": 0.0023,
+      "review_serp_snippet_and_intent": 0.152
+    },
+    "archetype_share": {
+      "ctr_opportunity": 0.152,
+      "decline_risk_review": 0.2814,
+      "engagement_gap": 0.0775,
+      "limited_signal": 0.2666,
+      "protect_winner": 0.2197,
+      "stale_visible": 0.0005,
+      "thin_visible": 0.0023
+    },
+    "clients": 32,
+    "missing_rate_before_fill": {
+      "avg_position": 0.0,
+      "best_model_probability": 0.0,
+      "content_age_days": 0.0,
+      "ctr": 0.0,
+      "days_since_last_update": 0.0,
+      "days_with_impressions": 0.0,
+      "engagement_rate": 0.0,
+      "impressions_90d": 0.0,
+      "scroll_rate": 0.0042,
+      "sessions_90d": 0.0,
+      "word_count": 0.0
+    },
+    "model_review_score_quantiles": {
+      "0.1": 0.2459,
+      "0.5": 0.5387,
+      "0.9": 0.7243
+    },
+    "review_priority_quantiles": {
+      "0.1": 25.99,
+      "0.5": 55.0,
+      "0.9": 70.9
+    },
+    "rows": 30000,
+    "source_mode": "full_regenerated_queue"
+  },
+  "monitoring_triggers": [
+    {
+      "automatic_retrain": false,
+      "check": "data_contract",
+      "response": "stop and repair",
+      "trigger": "any violation"
+    },
+    {
+      "automatic_retrain": false,
+      "check": "missingness_shift",
+      "response": "inspect extraction and tracking",
+      "trigger": "> 0.05 absolute increase"
+    },
+    {
+      "automatic_retrain": false,
+      "check": "score_or_action_drift",
+      "response": "audit data mix, windows and mapping",
+      "trigger": "PSI > 0.20 or action share shift > 0.20"
+    },
+    {
+      "automatic_retrain": false,
+      "check": "matured_outcome_quality",
+      "response": "pause client ranking and compare with baseline",
+      "trigger": "client P@50 <= own base rate for 2 windows"
+    },
+    {
+      "automatic_retrain": false,
+      "check": "reviewer_override",
+      "response": "review reason and action mapping",
+      "trigger": "> 0.40 same-reason rejection for 2 cycles"
+    },
+    {
+      "automatic_retrain": false,
+      "check": "new_or_small_client",
+      "response": "shadow mode",
+      "trigger": "< 50 mature rows or one class"
+    }
+  ],
+  "no_go": [
+    "no automatic rewrite or publish",
+    "no automatic redirect, delete, canonical or no-index",
+    "no cause or recovery claim",
+    "no cross-client score comparison",
+    "no new-client use outside shadow mode",
+    "no client names, URLs, domains, titles or raw queries in public exports",
+    "no automatic retrain, threshold change, promotion or deployment"
+  ],
+  "not_claimed": [
+    "that a flagged page is certainly declining",
+    "that refreshing a flagged page causes recovery",
+    "that the planning score is calibrated across clients",
+    "that the opportunity proxy is revenue or expected uplift",
+    "that Week-6 validation metrics apply to the heuristic re-rank"
+  ],
+  "planning_minutes_status": "assumptions for capacity only; not observed cost",
+  "priority_formula": {
+    "evidence_quality": 0.2,
+    "model_review_score": 0.5,
+    "status": "editorial planning heuristic; not validated model weights",
+    "within_client_opportunity_proxy": 0.3
+  },
+  "priority_inputs": [
+    "avg_position",
+    "best_model_probability",
+    "days_with_impressions",
+    "impressions_90d",
+    "sessions_90d"
+  ],
+  "queue_path": "work\\outputs\\w07_ranked_action_queue.csv",
+  "queue_sha256": "ddf09867446357240b6def03b6ce927e418b2474e2ae262c3fc8c8d4114f452c",
+  "review_band_counts": {
+    "monitor_later": 29532,
+    "review_next": 310,
+    "review_now": 158
+  },
+  "review_now_planning_minutes": 2980,
+  "rows_exported": 30000,
+  "source_mode": "full_regenerated_queue",
+  "source_path": "outputs\\refresh_queue.csv",
+  "source_sha256": "c89b6dd4853fbae970093ef81d1df3d2d4ae3c3d79ddefe73cd6249d5de2812d",
+  "validation_receipt": {
+    "decision_date": "2026-03-31",
+    "freshness_rows_not_knowable_at_decision_time_pct": 80.1,
+    "honest_features": [
+      "imp_prev30",
+      "clk_prev30",
+      "pos_prev30",
+      "days_active_prev30"
+    ],
+    "loco_clients_beating_own_base_rate": 22,
+    "loco_mean_lift_over_own_base_rate": 1.26,
+    "loco_mean_precision_at_50": 0.37,
+    "loco_median_precision_at_50": 0.3,
+    "loco_range": [
+      0.02,
+      0.76
+    ],
+    "loco_scoreable_clients": 29,
+    "loco_total_clients": 42,
+    "retrospective_unfiltered_queue_base_rate": 0.281,
+    "retrospective_unfiltered_queue_precision_at_50": 0.56,
+    "source_notebook": "work/notebooks/w06_validation_audit.ipynb",
+    "time_aware_unseen_client_mean_precision_at_50": 0.171,
+    "time_aware_week5_frame_base_rate": 0.174,
+    "time_aware_week5_frame_precision_at_50": 0.26
+  }
+}
