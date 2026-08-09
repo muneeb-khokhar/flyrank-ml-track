@@ -1,0 +1,99 @@
+{
+  "action_layer": {
+    "clients": 32,
+    "no_go": [
+      "no automatic rewrite or publish",
+      "no automatic redirect, delete, canonical or no-index",
+      "no cause or recovery claim",
+      "no cross-client score comparison",
+      "no new-client use outside shadow mode",
+      "no client names, URLs, domains, titles or raw queries in public exports",
+      "no automatic retrain, threshold change, promotion or deployment"
+    ],
+    "not_claimed": [
+      "that a flagged page is certainly declining",
+      "that refreshing a flagged page causes recovery",
+      "that the planning score is calibrated across clients",
+      "that the opportunity proxy is revenue or expected uplift",
+      "that Week-6 validation metrics apply to the heuristic re-rank"
+    ],
+    "priority_formula": {
+      "evidence_quality": 0.2,
+      "model_review_score": 0.5,
+      "status": "editorial planning heuristic; not validated model weights",
+      "within_client_opportunity_proxy": 0.3
+    },
+    "rows": 30000,
+    "source_mode": "full_regenerated_queue"
+  },
+  "analysis": {
+    "extracted_pages": 120507,
+    "features": [
+      "imp_prev30",
+      "clk_prev30",
+      "pos_prev30",
+      "days_active_prev30"
+    ],
+    "honest_complete_rows": 120458,
+    "honest_total_clients": 42,
+    "label": "imp_last30 < 0.8 * imp_prev30; imp_prev30 >= 10",
+    "march_feature_window": [
+      "2026-02-01",
+      "2026-03-01"
+    ],
+    "march_outcome_window": [
+      "2026-03-02",
+      "2026-03-31"
+    ],
+    "partitions": [
+      "2026-01",
+      "2026-02",
+      "2026-03"
+    ],
+    "scoreable_clients": 29,
+    "unscoreable_clients": 13,
+    "window_length_caveat": "saved prior window has 29 available calendar dates; outcome has 30"
+  },
+  "artifact": "capstone_research_paper_receipt",
+  "author": "Muneeb Ur Rehman",
+  "paper_status": "GitHub Pages-ready; live deployment must be verified by the author after push",
+  "primary_result": {
+    "clients_beating_own_base_rate": 22,
+    "design": "leave_one_client_out",
+    "matched_mean_client_base_rate": 0.319,
+    "mean_per_client_lift": 1.26,
+    "metric": "precision_at_50",
+    "model_mean": 0.37,
+    "model_median": 0.3,
+    "model_range": [
+      0.02,
+      0.76
+    ],
+    "scoreable_clients": 29
+  },
+  "release": {
+    "build_id": "flyrank_pseudonymized_warehouse_release_v20260703",
+    "daily_fact_date_max": "2026-06-30",
+    "daily_fact_date_min": "2025-01-27",
+    "daily_fact_rows": 78835655,
+    "export_date": "2026-07-03"
+  },
+  "secondary_checks": {
+    "grouped_seed_sweep_p50_mean": 0.489,
+    "grouped_seed_sweep_p50_range": [
+      0.28,
+      0.58
+    ],
+    "retrospective_unfiltered_population_base_rate": 0.281,
+    "retrospective_unfiltered_top50_p50": 0.56,
+    "time_aware_legacy_frame_base_rate": 0.174,
+    "time_aware_legacy_frame_p50": 0.26,
+    "time_aware_unseen_client_mean_p50": 0.171
+  },
+  "source_receipts": {
+    "w06_path": "work\\notebooks\\w06_validation_audit.ipynb",
+    "w06_sha256": "a7bade894e51de36e8f9e758686d35925fd9ccf60cb4cff293f3d01e5be7f3a7",
+    "w07_path": "work\\outputs\\w07_playbook_metrics.json",
+    "w07_sha256": "707d5ac843e7cd1c0e60d6affbbe783333a98a83eac3e9733b0fa5f4219a359c"
+  }
+}

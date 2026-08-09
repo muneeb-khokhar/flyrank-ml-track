@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A leakage-audited study of ranking content pages for human editorial review using FlyRank search-performance data.">
+  <meta name="author" content="Muneeb Ur Rehman">
+  <meta name="theme-color" content="#FBFAF7">
+  <title>Which pages should an editor review first? — Muneeb Ur Rehman</title>
+  <style>
+    :root {
+      --paper: #fbfaf7;
+      --paper-2: #f3f1eb;
+      --ink: #14161a;
+      --slate: #2f4858;
+      --muted: #5b6670;
+      --signal: #a8461f;
+      --rule: #d8d5ce;
+      --success: #245b45;
+      --max: 72rem;
+      --measure: 68ch;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 5rem;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 1rem;
+      line-height: 1.68;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: var(--signal);
+      text-decoration-thickness: 0.09em;
+      text-underline-offset: 0.18em;
+    }
+
+    a:hover { text-decoration-thickness: 0.14em; }
+
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--signal);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 100;
+      padding: 0.65rem 0.9rem;
+      color: var(--paper);
+      background: var(--ink);
+      transform: translateY(-180%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(47, 72, 88, 0.22);
+      background: rgba(251, 250, 247, 0.96);
+      backdrop-filter: blur(8px);
+    }
+
+    .site-nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      width: min(calc(100% - 2rem), var(--max));
+      min-height: 3.75rem;
+      margin: 0 auto;
+    }
+
+    .brand {
+      color: var(--ink);
+      font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.05rem;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+      scrollbar-width: thin;
+    }
+
+    .nav-links a {
+      color: var(--slate);
+      font-size: 0.82rem;
+      font-weight: 650;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover { color: var(--signal); }
+
+    main { overflow: clip; }
+
+    .hero {
+      border-bottom: 1px solid var(--rule);
+      background:
+        linear-gradient(rgba(47, 72, 88, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47, 72, 88, 0.045) 1px, transparent 1px),
+        var(--paper);
+      background-size: 2rem 2rem;
+    }
+
+    .hero__inner {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: clamp(4rem, 9vw, 8rem) 0 clamp(3.5rem, 7vw, 6rem);
+    }
+
+    .eyebrow,
+    .section-label {
+      margin: 0 0 0.8rem;
+      color: var(--slate);
+      font-size: 0.76rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    .metric__value {
+      font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+    h1 {
+      max-width: 17ch;
+      margin: 0;
+      font-size: clamp(2.65rem, 7.5vw, 5.9rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .dek {
+      max-width: 52ch;
+      margin: 1.5rem 0 0;
+      color: var(--slate);
+      font-size: clamp(1.12rem, 2.1vw, 1.42rem);
+      line-height: 1.5;
+    }
+
+    .byline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 1.25rem;
+      margin: 2rem 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .abstract {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: clamp(3rem, 6vw, 5rem) 0;
+    }
+
+    .abstract__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(15rem, 0.7fr);
+      gap: clamp(2rem, 6vw, 5rem);
+      align-items: start;
+    }
+
+    h2 {
+      margin: 0 0 1.2rem;
+      font-size: clamp(1.9rem, 4.5vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    h3 {
+      margin: 2rem 0 0.65rem;
+      font-size: 1.15rem;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+    }
+
+    p,
+    ul,
+    ol { max-width: var(--measure); }
+
+    .abstract__copy {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.08rem, 1.7vw, 1.25rem);
+      line-height: 1.75;
+    }
+
+    .metrics {
+      display: grid;
+      gap: 0;
+      border-top: 3px solid var(--slate);
+    }
+
+    .metric {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .metric__value {
+      display: block;
+      color: var(--signal);
+      font-size: 2.15rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .metric__label {
+      display: block;
+      margin-top: 0.5rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .scope-note {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: 1rem 1.15rem;
+      border-left: 4px solid var(--signal);
+      background: var(--paper-2);
+      color: var(--slate);
+      font-size: 0.92rem;
+    }
+
+    .scope-note strong { color: var(--ink); }
+
+    .paper-layout {
+      display: grid;
+      grid-template-columns: 13rem minmax(0, 1fr);
+      gap: clamp(2.5rem, 6vw, 6rem);
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: 4rem 0 7rem;
+    }
+
+    .toc {
+      position: sticky;
+      top: 5.25rem;
+      align-self: start;
+      padding-top: 0.25rem;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: toc;
+    }
+
+    .toc li {
+      counter-increment: toc;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .toc a {
+      display: grid;
+      grid-template-columns: 1.5rem 1fr;
+      gap: 0.35rem;
+      padding: 0.65rem 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+      text-decoration: none;
+    }
+
+    .toc a::before {
+      content: counter(toc, decimal-leading-zero);
+      color: var(--signal);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .toc a:hover { color: var(--ink); }
+
+    article { min-width: 0; }
+
+    .paper-section {
+      padding: 0 0 clamp(4rem, 8vw, 6.5rem);
+    }
+
+    .paper-section + .paper-section {
+      padding-top: clamp(4rem, 7vw, 5.5rem);
+      border-top: 1px solid var(--rule);
+    }
+
+    .lead {
+      color: var(--slate);
+      font-size: 1.15rem;
+      line-height: 1.65;
+    }
+
+    .definition {
+      margin: 1.5rem 0;
+      padding: 1.15rem 1.25rem;
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--slate);
+      background: rgba(243, 241, 235, 0.58);
+    }
+
+    .definition p { margin: 0; }
+
+    .equation {
+      display: inline-block;
+      margin: 0.35rem 0;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      background: var(--paper-2);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.9em;
+    }
+
+    .table-wrap {
+      max-width: 100%;
+      margin: 1.5rem 0 2rem;
+      overflow-x: auto;
+      border-top: 2px solid var(--slate);
+      border-bottom: 1px solid var(--slate);
+    }
+
+    table {
+      width: 100%;
+      min-width: 38rem;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      line-height: 1.45;
+    }
+
+    caption {
+      padding: 0 0 0.65rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 0.75rem 0.7rem;
+      border-bottom: 1px solid var(--rule);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--slate);
+      background: rgba(243, 241, 235, 0.62);
+      font-size: 0.73rem;
+      font-weight: 750;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+    }
+
+    td.num,
+    th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+      max-width: var(--measure);
+      margin: 1.4rem 0 2rem;
+    }
+
+    .feature {
+      padding: 1rem;
+      border: 1px solid var(--rule);
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .feature code {
+      color: var(--signal);
+      font-weight: 700;
+    }
+
+    .feature span {
+      display: block;
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.45;
+    }
+
+    figure {
+      max-width: 58rem;
+      margin: 2.4rem 0 2.8rem;
+      padding: 1rem 1rem 1.2rem;
+      border: 1px solid var(--rule);
+      background: var(--paper);
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    figcaption {
+      max-width: 76ch;
+      margin-top: 0.9rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    figcaption strong { color: var(--ink); }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      max-width: 48rem;
+      margin: 1.7rem 0 2.2rem;
+      border: 1px solid var(--rule);
+      background: var(--rule);
+    }
+
+    .result-card {
+      padding: 1.15rem;
+      background: var(--paper);
+    }
+
+    .result-card strong {
+      display: block;
+      color: var(--signal);
+      font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 1.7rem;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result-card span {
+      display: block;
+      margin-top: 0.5rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .honest-box {
+      max-width: var(--measure);
+      margin: 2rem 0;
+      padding: 1.2rem 1.35rem;
+      border: 2px solid var(--signal);
+      background: rgba(168, 70, 31, 0.035);
+    }
+
+    .honest-box h3 { margin-top: 0; }
+
+    .limitations-list,
+    .no-go-list,
+    .steps {
+      padding-left: 1.25rem;
+    }
+
+    .limitations-list li,
+    .no-go-list li,
+    .steps li {
+      max-width: var(--measure);
+      margin: 0 0 0.9rem;
+      padding-left: 0.35rem;
+    }
+
+    .steps { counter-reset: actions; list-style: none; padding: 0; }
+
+    .steps li {
+      position: relative;
+      min-height: 3rem;
+      padding-left: 4rem;
+    }
+
+    .steps li::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: grid;
+      width: 2.65rem;
+      height: 2.65rem;
+      place-items: center;
+      border: 1px solid var(--slate);
+      border-radius: 50%;
+      color: var(--signal);
+      content: counter(actions, decimal-leading-zero);
+      counter-increment: actions;
+      font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+      font-weight: 700;
+    }
+
+    .reason-code {
+      display: inline-block;
+      margin: 0.15rem 0.2rem 0.15rem 0;
+      padding: 0.16rem 0.42rem;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      color: var(--slate);
+      background: var(--paper-2);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.72rem;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+      max-width: 58rem;
+      margin: 2rem 0;
+    }
+
+    .policy-card {
+      padding: 1.2rem;
+      border: 1px solid var(--rule);
+    }
+
+    .policy-card h3 { margin-top: 0; }
+
+    .policy-card--stop { border-top: 4px solid var(--signal); }
+    .policy-card--go { border-top: 4px solid var(--success); }
+
+    pre {
+      max-width: 100%;
+      padding: 1rem 1.15rem;
+      overflow-x: auto;
+      border: 1px solid var(--rule);
+      background: #20272c;
+      color: #f6f3eb;
+      font-size: 0.83rem;
+      line-height: 1.55;
+    }
+
+    code {
+      overflow-wrap: anywhere;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    pre code {
+      overflow-wrap: normal;
+      word-break: normal;
+    }
+
+    .artifact-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      max-width: 50rem;
+      margin: 1.5rem 0;
+    }
+
+    .artifact-links a {
+      display: block;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--rule);
+      color: var(--slate);
+      font-size: 0.86rem;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .artifact-links a:hover {
+      border-color: var(--signal);
+      color: var(--signal);
+    }
+
+    .credit {
+      padding-bottom: 1rem;
+    }
+
+    .credit a { font-weight: 750; }
+
+    footer {
+      border-top: 1px solid var(--rule);
+      background: var(--paper-2);
+    }
+
+    .footer__inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: 1.5rem 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 56rem) {
+      .abstract__grid,
+      .paper-layout { grid-template-columns: 1fr; }
+      .toc { position: static; }
+      .toc ol { columns: 2; column-gap: 1.5rem; }
+      .toc li { break-inside: avoid; }
+      .result-grid { grid-template-columns: 1fr; }
+      .result-card { display: grid; grid-template-columns: 7rem 1fr; align-items: center; }
+      .result-card span { margin-top: 0; }
+    }
+
+    @media (max-width: 40rem) {
+      body { font-size: 0.98rem; }
+      .site-nav__inner { align-items: flex-start; flex-direction: column; gap: 0; padding: 0.7rem 0 0.35rem; }
+      .nav-links { width: 100%; }
+      .hero__inner { padding-top: 3.25rem; }
+      .feature-list,
+      .two-col,
+      .artifact-links { grid-template-columns: 1fr; }
+      .toc ol { columns: 1; }
+      .footer__inner { flex-direction: column; }
+      figure { margin-inline: -0.5rem; padding-inline: 0.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+
+    @media print {
+      .site-nav,
+      .toc,
+      .skip-link { display: none; }
+      .paper-layout,
+      .abstract__grid { display: block; }
+      .paper-layout { padding-top: 1rem; }
+      a { color: var(--ink); }
+      figure,
+      .paper-section { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to paper</a>
+
+  <nav class="site-nav" aria-label="Primary">
+    <div class="site-nav__inner">
+      <a class="brand" href="#top">Muneeb Ur Rehman</a>
+      <div class="nav-links" aria-label="Paper shortcuts">
+        <a href="#abstract">Abstract</a>
+        <a href="#results">Results</a>
+        <a href="#recommendations">Recommendations</a>
+        <a href="#reproducibility">Reproduce</a>
+        <a href="https://github.com/muneeb-khokhar/flyrank-ml-track">Repository</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <header class="hero" id="top">
+      <div class="hero__inner">
+        <p class="eyebrow">Applied ML research · Search intelligence</p>
+        <h1>Which pages should an editor review first?</h1>
+        <p class="dek">An honest content-decline ranking study across 120,507 pages, with the leakage audit and human decision rules left visible.</p>
+        <p class="byline">
+          <span>By Muneeb Ur Rehman</span>
+          <span>Refresh / Content Opportunity Scoring</span>
+          <span>August 2026</span>
+        </p>
+      </div>
+    </header>
+
+    <section class="abstract" id="abstract" aria-labelledby="abstract-title">
+      <div class="abstract__grid">
+        <div>
+          <p class="section-label">Abstract</p>
+          <h2 id="abstract-title">A useful queue, with a smaller honest result</h2>
+          <p class="abstract__copy">This study asks whether prior-window search signals can rank pages for editorial review more effectively than a transparent baseline. From FlyRank's pseudonymized warehouse release of 78,835,655 daily performance rows, I aggregated selected January–March 2026 partitions into a 120,507-page March analysis frame while excluding identifiers and signals unavailable before the outcome window. A random forest used four prior-window features—impressions, clicks, average position, and active days—and was evaluated with leave-one-client-out Precision@50 after label, timing, population, and positive-control leakage checks. Across 29 scoreable held-out clients, mean Precision@50 was 0.370, the model beat each client's own base rate in 22 cases, and mean per-client lift was 1.26×, although client results ranged from 0.020 to 0.760. The output is therefore a human-reviewed prioritization queue with reason codes and monitoring gates, not an automated editing system, a causal recovery claim, or a guarantee for new or small clients.</p>
+        </div>
+        <aside class="metrics" aria-label="Headline metrics">
+          <div class="metric">
+            <span class="metric__value">0.370</span>
+            <span class="metric__label">Mean Precision@50 across scoreable held-out clients</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">22 / 29</span>
+            <span class="metric__label">Clients where the model beat the matched base rate</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">1.26×</span>
+            <span class="metric__label">Mean per-client lift, not a causal uplift estimate</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <aside class="scope-note" aria-label="Scope clarification">
+      <strong>Scope clarification.</strong> The release contains about 78.8M daily rows; the model was evaluated on a 120,458-row complete-case subset of a 120,507-page aggregate—not on 79M independent training examples.
+    </aside>
+
+    <div class="paper-layout">
+      <nav class="toc" aria-label="Table of contents">
+        <p class="section-label">Contents</p>
+        <ol>
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#data">Data</a></li>
+          <li><a href="#methodology">Methodology</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#limitations">Limitations</a></li>
+          <li><a href="#recommendations">Recommendations</a></li>
+          <li><a href="#reproducibility">Reproducibility</a></li>
+          <li><a href="#acknowledgments">Acknowledgments</a></li>
+        </ol>
+      </nav>
+
+      <article aria-label="Research paper">
+        <section class="paper-section" id="introduction" aria-labelledby="introduction-title">
+          <p class="section-label">01 · Introduction</p>
+          <h2 id="introduction-title">The scarce resource is an editor's attention</h2>
+          <p class="lead">A content team cannot inspect every page every week. The operational question is narrower: which pages should enter a limited human review queue first?</p>
+          <p>One analysis row represents one pseudonymized content item. The model produces a score used for ranking; an editor decides whether to diagnose, defer, monitor, or propose an edit. This is a ranking problem implemented with a classifier, not an attempt to assign an unquestionable yes/no verdict to each page.</p>
+          <p>Precision@50 is the primary metric because reviewer capacity is the constraint. A false positive consumes recoverable review time. A false negative can leave a genuine decline unseen until the next cycle. The model should therefore concentrate observed declines near the top without being allowed to diagnose a cause or make a publishing decision.</p>
+          <div class="definition">
+            <p><strong>Research question.</strong> Can four prior-window search signals rank the fifty pages most worth reviewing more effectively than random ordering for a client the model has not seen?</p>
+          </div>
+          <p>The project began with a stronger comparison against a “stale and visible” hand rule. The validation audit changed the story: the freshness input was not available at the analysis boundary for most rows, so the final defensible baseline is random ordering at each held-out client's observed decline rate. The old rule appears below only as an audit-trail result.</p>
+        </section>
+
+        <section class="paper-section" id="data" aria-labelledby="data-title">
+          <p class="section-label">02 · Data</p>
+          <h2 id="data-title">A 78.8M-row release, a 120,507-page analysis</h2>
+          <p class="lead">The source is the fixed, pseudonymized build <code>flyrank_pseudonymized_warehouse_release_v20260703</code>, exported 3 July 2026.</p>
+
+          <div class="table-wrap" role="region" aria-label="Data sources" tabindex="0">
+            <table>
+              <caption>Table 1. Release tables touched by the analysis and audit.</caption>
+              <thead>
+                <tr><th scope="col">Table</th><th scope="col">Release rows</th><th scope="col">Grain</th><th scope="col">Use here</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>fact_content_daily_performance</code></td><td class="num">78,835,655</td><td>date × client × content</td><td>Primary features and outcome windows</td></tr>
+                <tr><td><code>dim_content</code></td><td class="num">519,606</td><td>content item</td><td>Freshness audit; final freshness feature excluded</td></tr>
+                <tr><td><code>fact_content_query_90d</code></td><td class="num">2,414,248</td><td>client × content × query hash</td><td>Timing audit; final query features excluded</td></tr>
+                <tr><td><code>dim_clients</code></td><td class="num">104</td><td>client</td><td>History-coverage context; never a model feature</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The warehouse daily fact spans 27 January 2025–30 June 2026, but this study queried selected January–March 2026 partitions. In the saved March frame, features cover 1 February–1 March 2026 and the outcome covers 2–31 March; the earlier frame uses 1–29 January for features and 30 January–28 February for its outcome. The legacy <code>_prev30</code> name describes the intended role, but the available prior window contains 29 calendar dates while the outcome contains 30. The March frame contains 120,507 content items with at least ten prior-window impressions; 120,458 have all four final features.</p>
+
+          <div class="table-wrap" role="region" aria-label="Analysis population" tabindex="0">
+            <table>
+              <caption>Table 2. Population accounting; no denominator is silently dropped.</caption>
+              <thead>
+                <tr><th scope="col">Stage</th><th scope="col" class="num">Rows / clients</th><th scope="col">Reason</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>March page aggregate</td><td class="num">120,507 pages</td><td>At least ten prior-window impressions</td></tr>
+                <tr><td>Final complete model frame</td><td class="num">120,458 pages / 42 clients</td><td>Complete on four decision-time features</td></tr>
+                <tr><td>LOCO-scoreable clients</td><td class="num">29</td><td>At least 50 rows and both outcome classes</td></tr>
+                <tr><td>Reported but not scored</td><td class="num">13 clients</td><td>Too small or single-class for Precision@50</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Public-safety exclusions</h3>
+          <p>The release excludes real client names, domains, raw URLs, titles, keywords, raw queries, and reversal keys. Pseudonymous client IDs are used only to form validation groups; no pseudonymous row ID appears on this page. Outcome-window values, product scores, and post-window fields are also excluded from model inputs.</p>
+        </section>
+
+        <section class="paper-section" id="methodology" aria-labelledby="methodology-title">
+          <p class="section-label">03 · Methodology</p>
+          <h2 id="methodology-title">Make the split answer the real question</h2>
+
+          <h3>Label and assumptions</h3>
+          <p>The observed proxy is:</p>
+          <p class="equation">is_declining = imp_last30 &lt; 0.8 × imp_prev30</p>
+          <p>A positive page lost more than 20% of impressions from the prior window to the outcome window, after requiring at least ten prior-window impressions. This is a review-worthiness proxy, not a diagnosis of content quality. Precision@50 assumes a fifty-page review capacity and values correct early ranking over complete recall.</p>
+
+          <h3>Final feature set</h3>
+          <div class="feature-list" aria-label="Final model features">
+            <div class="feature"><code>imp_prev30</code><span>Prior-window GSC impressions</span></div>
+            <div class="feature"><code>clk_prev30</code><span>Prior-window GSC clicks</span></div>
+            <div class="feature"><code>pos_prev30</code><span>Mean position on days with impressions</span></div>
+            <div class="feature"><code>days_active_prev30</code><span>Prior-window days with impressions</span></div>
+          </div>
+          <p>A 300-tree random forest with <code>random_state=42</code> converts these features to a review score. Client and content hashes, the outcome numerator, label, product outputs, update age, and fixed-window query shares are not features.</p>
+
+          <h3>Baseline and validation design</h3>
+          <p>The final null baseline is random ordering within the held-out client. Its expected Precision@50 equals that same client's observed positive rate, so model and baseline share every fold and denominator.</p>
+          <p>The headline uses leave-one-client-out validation: train on every client except one, score the unseen client, repeat. Clients with fewer than 50 rows or one outcome class remain in the reported panel but do not receive a P@50. A seven-seed grouped sweep (<code>0, 1, 7, 13, 42, 99, 2024</code>) measures sensitivity to the client draw. A February→March check adds temporal ordering, but it used the legacy query-filtered population and is presented as secondary stress evidence.</p>
+
+          <h3>Leakage checks</h3>
+          <div class="table-wrap" role="region" aria-label="Leakage audit" tabindex="0">
+            <table>
+              <caption>Table 3. The checks that changed the final model.</caption>
+              <thead>
+                <tr><th scope="col">Check</th><th scope="col">Observed evidence</th><th scope="col">Decision</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Label-derived positive control</td><td>Adding <code>imp_last30</code> produced P@50 = 1.000</td><td>Harness detects obvious leakage; outcome stays evaluation-only</td></tr>
+                <tr><td>Feature timing</td><td><code>days_since_update</code> was negative for 65,211 of 81,446 modeled rows (80.1%)</td><td>Drop freshness from the model</td></tr>
+                <tr><td>Query-window timing</td><td><code>rare_share</code> and <code>anon_share</code> describe a fixed window after the March outcome</td><td>Drop both query features</td></tr>
+                <tr><td>Population selection</td><td>39,061 query-absent rows were dropped; their decline rate was 0.505 versus 0.174 among kept rows</td><td>Remove the post-window survival filter</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="paper-section" id="results" aria-labelledby="results-title">
+          <p class="section-label">04 · Results</p>
+          <h2 id="results-title">The honest gain is positive, modest, and uneven</h2>
+          <p class="lead">On the same 29 held-out-client folds, model Precision@50 averaged 0.370 and the matched client base rates averaged 0.319.</p>
+
+          <div class="result-grid" aria-label="Primary result summary">
+            <div class="result-card"><strong>+0.051</strong><span>Absolute mean P@50 difference over the matched client base rates</span></div>
+            <div class="result-card"><strong>22 / 29</strong><span>Scoreable clients where model P@50 exceeded the client's own base rate</span></div>
+            <div class="result-card"><strong>0.020–0.760</strong><span>Range of model P@50 across held-out clients</span></div>
+          </div>
+
+          <figure>
+            <img src="assets/capstone-model-vs-baseline.svg" alt="Bar chart: mean random-order client base rate is 0.319 and mean random-forest Precision at 50 is 0.370 on the same 29 leave-one-client-out folds." width="920" height="500">
+            <figcaption><strong>Figure 1. Same-fold comparison.</strong> The final gain is real in this panel but much smaller than the exploratory result. The baseline mean is calculated from the displayed client-level base-rate receipts, rounded to three decimals in Week 6.</figcaption>
+          </figure>
+
+          <figure>
+            <img src="assets/capstone-client-variability.svg" alt="Dot chart for 29 anonymous held-out clients: matched base rates and model Precision at 50 vary widely; the model is above baseline for 22 clients and at or below for seven." width="1050" height="535">
+            <figcaption><strong>Figure 2. Client heterogeneity.</strong> The average hides the operational limit: seven scoreable clients did not beat random ordering, and thirteen more clients were too small or one-sided to score at all.</figcaption>
+          </figure>
+
+          <h3>Why the original headline was retired</h3>
+          <div class="table-wrap" role="region" aria-label="Exploratory comparison" tabindex="0">
+            <table>
+              <caption>Table 4. Same exploratory seed-42 split; shown as the audit trigger, not the final result.</caption>
+              <thead>
+                <tr><th scope="col">Method</th><th scope="col" class="num">Precision@50</th><th scope="col">Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Random ordering (test base rate)</td><td class="num">0.161</td><td>Same 21,610-row, nine-client test split</td></tr>
+                <tr><td>Hand-written stale + visible rule</td><td class="num">0.100</td><td>Retired after timestamp audit</td></tr>
+                <tr><td>Logistic regression</td><td class="num">0.260</td><td>Exploratory seven-feature frame</td></tr>
+                <tr><td>Random forest</td><td class="num">0.520</td><td>One client draw; not the headline</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Changing only the grouped split seed moved the random forest from 0.280 to 0.580 (mean 0.489 across seven seeds). The single 0.520 result was therefore one draw of clients, not a stable estimate.</p>
+
+          <h3>Secondary time check</h3>
+          <p>Training on an earlier frame and scoring March produced P@50 = 0.260 against a 0.174 base rate with the four-feature model; restricting the March test to unseen clients averaged 0.171. This check used the legacy query-filtered population later rejected by the audit. It is evidence about fragility, not the final forward-time estimate. A future unfiltered temporal holdout is still required.</p>
+
+          <h3>Error analysis</h3>
+          <p>A retrospective, unfiltered top-50 queue contained 28 true declines and 22 false positives (P@50 = 0.560 versus a 0.281 population base rate). The five largest declines missed in the bottom half had median prior-window impressions of 117,869, compared with 112.5 among surfaced true positives. Volume was available and the model still missed high-impact pages—exactly why a low rank cannot override a known business-critical page.</p>
+        </section>
+
+        <section class="paper-section" id="limitations" aria-labelledby="limitations-title">
+          <p class="section-label">05 · Limitations</p>
+          <h2 id="limitations-title">What this study cannot support</h2>
+          <ul class="limitations-list">
+            <li><strong>One short, unbalanced panel.</strong> Results come from selected January–March 2026 partitions and do not establish seasonality or long-run stability.</li>
+            <li><strong>A threshold proxy.</strong> A 20% impression drop is practical, but pages just above and below it may be operationally similar.</li>
+            <li><strong>Unequal saved window lengths.</strong> The selected-partition SQL gives the prior frame 29 available dates and the outcome 30, despite the legacy <code>_prev30</code> name. This may slightly affect the label and should be corrected in a rerun that includes the missing boundary date.</li>
+            <li><strong>Uneven generalization.</strong> Seven of 29 scoreable clients did not beat their base rate; 13 clients could not be scored under the minimum.</li>
+            <li><strong>Incomplete temporal evidence.</strong> The saved forward-time check retained a later-discovered query-availability population filter.</li>
+            <li><strong>No causal effect.</strong> No refresh actions were randomized, so this work cannot claim that editing a flagged page causes recovery.</li>
+            <li><strong>No semantic diagnosis.</strong> The public release contains pseudonymized metrics, not page text, live SERPs, brand constraints, or private queries.</li>
+            <li><strong>No calibrated business value.</strong> Action weights and planning minutes organize review capacity; they are not revenue forecasts or treatment effects.</li>
+          </ul>
+
+          <div class="honest-box">
+            <h3>The claim I will defend</h3>
+            <p>This random forest sometimes concentrated observed declines in a fifty-page human review queue better than random ordering for held-out clients in this panel. It does not predict Google's algorithm, promise recovery, authorize an edit, or guarantee performance on a new or small client.</p>
+          </div>
+        </section>
+
+        <section class="paper-section" id="recommendations" aria-labelledby="recommendations-title">
+          <p class="section-label">06 · Ranked recommendations</p>
+          <h2 id="recommendations-title">Score first; diagnose second; act only after review</h2>
+          <p class="lead">The score selects what a person inspects. It never selects what gets published.</p>
+          <p>The Week-7 action layer consumes the model review score available in the locally regenerated queue interface and combines it with a within-client opportunity proxy (30%) and evidence quality (20%); the model score receives 50%. These are planning weights, not fitted causal values. The queue is ranked within each client because scores are not calibrated for cross-client comparison, and the Week-6 validation metrics do not transfer to this heuristic re-rank.</p>
+
+          <!-- ACTION_SCOPE_START -->
+          <div class="definition">
+            <p><strong>Executed action-interface scope.</strong> The local pipeline regenerated 30,000 pseudonymous rows across 32 clients: 158 <code>review_now</code>, 310 <code>review_next</code>, and 29,532 <code>monitor_later</code>. These counts describe the action input, not model-validation performance, and the row-level CSV remains out of Git.</p>
+          </div>
+          <!-- ACTION_SCOPE_END -->
+
+          <ol class="steps">
+            <li><strong>Diagnose decline-risk pages.</strong> Check tracking, indexation, seasonality, intent shifts, competitors, and cannibalization before proposing an edit.<br><span class="reason-code">model_ranked_candidate</span><span class="reason-code">model_decline_risk</span></li>
+            <li><strong>Protect visible winners.</strong> Visibility raises the cost of an unnecessary change; diagnose before touching a page-one result.<br><span class="reason-code">visible_demand</span><span class="reason-code">page_one_to_protect</span></li>
+            <li><strong>Review snippet and intent for CTR opportunities.</strong> Compare query intent and the live SERP; low aggregate CTR alone does not prove a title problem.<br><span class="reason-code">low_ctr_visible_page</span></li>
+            <li><strong>Review content experience for engagement gaps.</strong> Verify analytics coverage, structure, intent fit, and page experience before attributing the signal to content.<br><span class="reason-code">weak_engagement_signal</span></li>
+            <li><strong>Refresh only after verifying decay.</strong> Staleness alone is not permission to edit. Confirm the timestamp, factual decay, and intent drift manually.<br><span class="reason-code">verified_staleness</span><span class="reason-code">visible_demand</span></li>
+            <li><strong>Monitor thin or limited-signal pages.</strong> Never add words merely to hit a count; collect evidence when the signal is too weak.<br><span class="reason-code">thin_content_signal</span><span class="reason-code">limited_evidence</span></li>
+          </ol>
+
+          <h3>The decay / refresh finding</h3>
+          <p>The original staleness assumption did not survive measurement. The update-derived feature was negative for 80.1% of modeled rows at the analysis anchor, meaning the stored update happened after the period the model was supposed to know. Consequently, freshness is removed from model ranking and appears only as a manually verified action clue. This study does not establish that older pages decay more or that refreshing them recovers traffic.</p>
+
+          <h3>Cost / value thinking</h3>
+          <!-- ACTION_CAPACITY_START -->
+          <p>The action layer assigns five to thirty-five assumed minutes by archetype to turn a review band into a capacity estimate. In this run, the 158 <code>review_now</code> rows total 2,980 assumed minutes (about 49.7 hours). That estimate is for staffing a review cycle only. No expected traffic or revenue uplift is calculated because the study has no treatment-effect data. High-visibility winners receive protective review because the downside of an unnecessary edit is greater; limited-signal pages are deferred because acting on noise spends time without evidence.</p>
+          <!-- ACTION_CAPACITY_END -->
+
+          <div class="two-col">
+            <div class="policy-card policy-card--go">
+              <h3>Permitted automation</h3>
+              <ul>
+                <li>Score and rank pseudonymous rows within a client</li>
+                <li>Attach transparent reason codes</li>
+                <li>Calculate review bands and assumed workload</li>
+                <li>Record reviewer accept / defer / reject feedback</li>
+              </ul>
+            </div>
+            <div class="policy-card policy-card--stop">
+              <h3>Never automate from this study</h3>
+              <ul class="no-go-list">
+                <li>Rewrite or publish content</li>
+                <li>Redirect, delete, canonicalize, or no-index</li>
+                <li>Diagnose a cause or promise recovery</li>
+                <li>Compare raw scores across clients</li>
+                <li>Promote a new/small client beyond shadow mode</li>
+                <li>Retrain, change thresholds, or deploy</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Light monitoring and retrain triggers</h3>
+          <div class="table-wrap" role="region" aria-label="Monitoring triggers" tabindex="0">
+            <table>
+              <caption>Table 5. Every trigger opens a human review; none starts automatic retraining.</caption>
+              <thead>
+                <tr><th scope="col">Check</th><th scope="col">Trigger</th><th scope="col">Human response</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Data contract</td><td>Any violation</td><td>Stop and repair</td></tr>
+                <tr><td>Missingness shift</td><td>&gt;5 percentage-point increase</td><td>Inspect extraction and tracking</td></tr>
+                <tr><td>Score / action drift</td><td>PSI &gt;0.20 or action-share shift &gt;0.20</td><td>Audit data mix, windows, and mapping</td></tr>
+                <tr><td>Matured outcome quality</td><td>Client P@50 ≤ own base rate for two windows</td><td>Pause that ranking and compare with baseline</td></tr>
+                <tr><td>Reviewer override</td><td>&gt;40% same-reason rejection for two cycles</td><td>Review reason and action mapping</td></tr>
+                <tr><td>New / small client</td><td>&lt;50 mature rows or one class</td><td>Keep in shadow mode</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="paper-section" id="reproducibility" aria-labelledby="reproducibility-title">
+          <p class="section-label">07 · Reproducibility</p>
+          <h2 id="reproducibility-title">The receipts are part of the result</h2>
+          <p class="lead">The repository contains the framing, extraction logic, model, validation audit, action playbook, capstone notebook, aggregate receipts, and paper source.</p>
+
+          <div class="artifact-links">
+            <a href="https://github.com/muneeb-khokhar/flyrank-ml-track">Repository ↗</a>
+            <a href="https://github.com/muneeb-khokhar/flyrank-ml-track/blob/main/work/notebooks/capstone.ipynb">Executed capstone notebook ↗</a>
+            <a href="https://github.com/muneeb-khokhar/flyrank-ml-track/blob/main/work/notebooks/w03_data_contract.ipynb">Data contract ↗</a>
+            <a href="https://github.com/muneeb-khokhar/flyrank-ml-track/blob/main/work/notebooks/w05_model.ipynb">Exploratory model ↗</a>
+            <a href="https://github.com/muneeb-khokhar/flyrank-ml-track/blob/main/work/notebooks/w06_validation_audit.ipynb">Validation and leakage audit ↗</a>
+            <a href="https://github.com/muneeb-khokhar/flyrank-ml-track/blob/main/work/notebooks/w07_action_playbook.ipynb">Action playbook ↗</a>
+            <a href="https://github.com/muneeb-khokhar/flyrank-ml-track/blob/main/work/outputs/capstone_metrics.json">Capstone metrics receipt ↗</a>
+            <a href="https://github.com/muneeb-khokhar/flyrank-ml-track/blob/main/work/outputs/w07_playbook_metrics.json">Playbook metrics receipt ↗</a>
+          </div>
+
+          <p>From a fresh clone:</p>
+          <pre><code>python -m pip install -r requirements.txt
+python scripts/run_all.py
+jupyter lab</code></pre>
+          <p>Then run <code>w06_validation_audit.ipynb</code>, <code>w07_action_playbook.ipynb</code>, and <code>capstone.ipynb</code> top to bottom. Full-warehouse reproduction requires approved Hugging Face access and a local <code>hf-token.txt</code> as documented in <a href="https://github.com/muneeb-khokhar/flyrank-ml-track/blob/main/SETUP.md">SETUP.md</a>; that token must never be committed.</p>
+          <p>The random forest uses 300 trees and <code>random_state=42</code>. Grouped sensitivity seeds are <code>0, 1, 7, 13, 42, 99, 2024</code>. Row-level queue CSVs stay ignored and regenerate locally; committed JSON receipts preserve aggregate claims without publishing private context.</p>
+        </section>
+
+        <section class="paper-section credit" id="acknowledgments" aria-labelledby="acknowledgments-title">
+          <p class="section-label">08 · Acknowledgments &amp; data credit</p>
+          <h2 id="acknowledgments-title">Data credit</h2>
+          <p><a href="https://flyrank.ai">Built on the FlyRank ML Internship dataset</a>. I also acknowledge the internship's research and data-safety framework, which made the pseudonymized release and its documentation available for this study.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer__inner">
+      <span>Research artifact by Muneeb Ur Rehman · August 2026</span>
+      <span>Observed · measured · directional · decision-support</span>
+    </div>
+  </footer>
+</body>
+</html>
